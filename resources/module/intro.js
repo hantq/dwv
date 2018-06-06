@@ -9,7 +9,6 @@
         define([
             'i18next',
             'i18next-xhr-backend',
-            'i18next-browser-languagedetector',
             'jszip',
             'konva'
         ], factory);
@@ -25,7 +24,6 @@
         module.exports = factory(
             require('i18next'),
             require('i18next-xhr-backend'),
-            require('i18next-browser-languagedetector'),
             require('jszip'),
             require('konva'),
             null
@@ -35,7 +33,6 @@
         root.dwv = factory(
             root.i18next,
             root.i18nextXHRBackend,
-            root.i18nextBrowserLanguageDetector,
             root.JSZip,
             root.Konva,
             root.MagicWand
@@ -44,7 +41,6 @@
 }(this, function (
     i18next,
     i18nextXHRBackend,
-    i18nextBrowserLanguageDetector,
     JSZip,
     Konva,
     MagicWand) {

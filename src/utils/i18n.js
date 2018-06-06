@@ -3,7 +3,6 @@ var dwv = dwv || {};
 // external
 var i18next = i18next || {};
 var i18nextXHRBackend = i18nextXHRBackend || {};
-var i18nextBrowserLanguageDetector = i18nextBrowserLanguageDetector || {};
 
 // This is mainly a wrapper around the i18next object.
 // see its API: http://i18next.com/docs/api/
@@ -13,16 +12,14 @@ dwv.i18nLocalesPath = null;
 
 /**
  * Initialise i18n.
- * @param {String} language The language to translate to. Defaults to 'auto' and
- *   gets the language from the browser.
+ * @param {String} language The language to translate to, values are 'en' or 'zh'. Defaults to 'en'.
  * @param {String} localesPath Path to the locales directory.
  * @external i18next
  * @external i18nextXHRBackend
- * @external i18nextBrowserLanguageDetector
  */
 dwv.i18nInitialise = function (language, localesPath)
 {
-    var lng = (typeof language === "undefined") ? "auto" : language;
+    var lng = (typeof language === "undefined") ? "en" : language;
     var lpath = (typeof localesPath === "undefined") ? "../.." : localesPath;
     // store as global
     dwv.i18nLocalesPath = lpath;
@@ -30,18 +27,12 @@ dwv.i18nInitialise = function (language, localesPath)
     //  only load language, not specialised (for ex en-GB)
     var options = {
         fallbackLng: "en",
+        lng: lng,
         load: "languageOnly",
         backend: { loadPath: lpath + "/locales/{{lng}}/{{ns}}.json" }
     };
     // use the XHR backend to get translation files
     var i18n = i18next.use(i18nextXHRBackend);
-    // use browser language or the specified one
-    if (lng === "auto") {
-        i18n.use(i18nextBrowserLanguageDetector);
-    }
-    else {
-        options.lng = lng;
-    }
     // init i18n: will be ready when the 'loaded' event is fired
     i18n.init(options);
 };
@@ -52,28 +43,21 @@ dwv.i18nInitialise = function (language, localesPath)
  *   gets the language from the browser.
  * @param {Object} resources Languages provided as object.
  * @external i18next
- * @external i18nextBrowserLanguageDetector
  */
 dwv.i18nInitialiseWithResources = function (language, resources)
 {
-    var lng = (typeof language === "undefined") ? "auto" : language;
+    var lng = (typeof language === "undefined") ? "en" : language;
     // i18n options: default 'en' language and
     //  only load language, not specialised (for ex en-GB)
     var options = {
         fallbackLng: "en",
+        lng: lng,
         load: "languageOnly",
         resources: resources
     };
     // use browser language or the specified one
     // init i18n: will be ready when the 'loaded' event is fired
-    if (lng === "auto") {
-        var i18n = i18next.use(i18nextBrowserLanguageDetector);
-        i18n.init(options);
-    }
-    else {
-        options.lng = lng;
-        i18next.init(options);
-    }
+    i18n.init(options);
 };
 
 /**
