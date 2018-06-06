@@ -4,10 +4,11 @@
 // Do not warn if these variables were not defined before.
 /* global importScripts, self, jpeg */
 
-importScripts('lossless-min.js'); 
+importScripts('lossless-min.js');
 
-self.addEventListener('message', function (event) {
-    
+self.addEventListener(
+  'message',
+  function(event) {
     // bytes per element
     var bpe = event.data.bitsAllocated / 8;
     // decode DICOM buffer
@@ -17,21 +18,19 @@ self.addEventListener('message', function (event) {
     // post decoded data
     var res = null;
     if (event.data.bitsAllocated === 8) {
-        if (event.data.isSigned) {
-            res = new Int8Array(decoded.buffer);
-        }
-        else {
-            res = new Uint8Array(decoded.buffer);
-        }
-    }
-    else if (event.data.bitsAllocated === 16) {
-        if (event.data.isSigned) {
-            res = new Int16Array(decoded.buffer);
-        }
-        else {
-            res = new Uint16Array(decoded.buffer);
-        }
+      if (event.data.isSigned) {
+        res = new Int8Array(decoded.buffer);
+      } else {
+        res = new Uint8Array(decoded.buffer);
+      }
+    } else if (event.data.bitsAllocated === 16) {
+      if (event.data.isSigned) {
+        res = new Int16Array(decoded.buffer);
+      } else {
+        res = new Uint16Array(decoded.buffer);
+      }
     }
     self.postMessage([res]);
-    
-}, false);
+  },
+  false
+);
