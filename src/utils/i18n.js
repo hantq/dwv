@@ -17,24 +17,23 @@ dwv.i18nLocalesPath = null;
  * @external i18next
  * @external i18nextXHRBackend
  */
-dwv.i18nInitialise = function (language, localesPath)
-{
-    var lng = (typeof language === "undefined") ? "en" : language;
-    var lpath = (typeof localesPath === "undefined") ? "../.." : localesPath;
-    // store as global
-    dwv.i18nLocalesPath = lpath;
-    // i18n options: default 'en' language and
-    //  only load language, not specialised (for ex en-GB)
-    var options = {
-        fallbackLng: "en",
-        lng: lng,
-        load: "languageOnly",
-        backend: { loadPath: lpath + "/locales/{{lng}}/{{ns}}.json" }
-    };
-    // use the XHR backend to get translation files
-    var i18n = i18next.use(i18nextXHRBackend);
-    // init i18n: will be ready when the 'loaded' event is fired
-    i18n.init(options);
+dwv.i18nInitialise = function(language, localesPath) {
+  var lng = typeof language === 'undefined' ? 'en' : language;
+  var lpath = typeof localesPath === 'undefined' ? '../..' : localesPath;
+  // store as global
+  dwv.i18nLocalesPath = lpath;
+  // i18n options: default 'en' language and
+  //  only load language, not specialised (for ex en-GB)
+  var options = {
+    fallbackLng: 'en',
+    lng: lng,
+    load: 'languageOnly',
+    backend: { loadPath: lpath + '/locales/{{lng}}/{{ns}}.json' },
+  };
+  // use the XHR backend to get translation files
+  var i18n = i18next.use(i18nextXHRBackend);
+  // init i18n: will be ready when the 'loaded' event is fired
+  i18n.init(options);
 };
 
 /**
@@ -44,20 +43,19 @@ dwv.i18nInitialise = function (language, localesPath)
  * @param {Object} resources Languages provided as object.
  * @external i18next
  */
-dwv.i18nInitialiseWithResources = function (language, resources)
-{
-    var lng = (typeof language === "undefined") ? "en" : language;
-    // i18n options: default 'en' language and
-    //  only load language, not specialised (for ex en-GB)
-    var options = {
-        fallbackLng: "en",
-        lng: lng,
-        load: "languageOnly",
-        resources: resources
-    };
-    // use browser language or the specified one
-    // init i18n: will be ready when the 'loaded' event is fired
-    i18n.init(options);
+dwv.i18nInitialiseWithResources = function(language, resources) {
+  var lng = typeof language === 'undefined' ? 'en' : language;
+  // i18n options: default 'en' language and
+  //  only load language, not specialised (for ex en-GB)
+  var options = {
+    fallbackLng: 'en',
+    lng: lng,
+    load: 'languageOnly',
+    resources: resources,
+  };
+  // use browser language or the specified one
+  // init i18n: will be ready when the 'loaded' event is fired
+  i18n.init(options);
 };
 
 /**
@@ -66,16 +64,16 @@ dwv.i18nInitialiseWithResources = function (language, resources)
  *  It can take one argument that will be replaced with the i18n options.
  * @external i18next
  */
-dwv.i18nOnInitialised = function (callback) {
-    i18next.on('initialized', callback);
+dwv.i18nOnInitialised = function(callback) {
+  i18next.on('initialized', callback);
 };
 
 /**
  * Stop handling i18n load event.
  * @external i18next
  */
-dwv.i18nOffInitialised = function () {
-    i18next.off('initialized');
+dwv.i18nOffInitialised = function() {
+  i18next.off('initialized');
 };
 
 /**
@@ -84,16 +82,16 @@ dwv.i18nOffInitialised = function () {
  *  It can take three arguments: lng, ns and msg.
  * @external i18next
  */
-dwv.i18nOnFailedLoad = function (callback) {
-    i18next.on('failedLoading', callback);
+dwv.i18nOnFailedLoad = function(callback) {
+  i18next.on('failedLoading', callback);
 };
 
 /**
  * Stop handling i18n failed load event.
  * @external i18next
  */
-dwv.i18nOffFailedLoad = function () {
-    i18next.off('failedLoading');
+dwv.i18nOffFailedLoad = function() {
+  i18next.off('failedLoading');
 };
 
 /**
@@ -102,8 +100,8 @@ dwv.i18nOffFailedLoad = function () {
  * @param {Object} options The translation options such as plural, context...
  * @external i18next
  */
-dwv.i18n = function (key, options) {
-    return i18next.t(key, options);
+dwv.i18n = function(key, options) {
+  return i18next.t(key, options);
 };
 
 /**
@@ -112,8 +110,8 @@ dwv.i18n = function (key, options) {
  * @param {Object} options The translation options such as plural, context...
  * @external i18next
  */
-dwv.i18nExists = function (key, options) {
-    return i18next.exists(key, options);
+dwv.i18nExists = function(key, options) {
+  return i18next.exists(key, options);
 };
 
 /**
@@ -121,15 +119,15 @@ dwv.i18nExists = function (key, options) {
  * data-i18n attribute, its value will be used as key to find its corresponding text
  * and will replace the content of the html tag.
  */
-dwv.i18nPage = function () {
-    // get all elements
-    var elements = document.getElementsByTagName("*");
-    // if the element defines data-i18n, replace its content with the tranlation
-    for (var i = 0; i < elements.length; ++i) {
-        if (typeof elements[i].dataset.i18n !== "undefined") {
-            elements[i].innerHTML = dwv.i18n(elements[i].dataset.i18n);
-        }
+dwv.i18nPage = function() {
+  // get all elements
+  var elements = document.getElementsByTagName('*');
+  // if the element defines data-i18n, replace its content with the tranlation
+  for (var i = 0; i < elements.length; ++i) {
+    if (typeof elements[i].dataset.i18n !== 'undefined') {
+      elements[i].innerHTML = dwv.i18n(elements[i].dataset.i18n);
     }
+  }
 };
 
 /**
@@ -137,10 +135,9 @@ dwv.i18nPage = function () {
  * Warning: to be used once i18next is initialised.
  * @return {String} The path to the locale resource.
  */
-dwv.i18nGetLocalePath = function (filename) {
-    var lng = i18next.language.substr(0, 2);
-    return dwv.i18nLocalesPath +
-        "/locales/" + lng + "/" + filename;
+dwv.i18nGetLocalePath = function(filename) {
+  var lng = i18next.language.substr(0, 2);
+  return dwv.i18nLocalesPath + '/locales/' + lng + '/' + filename;
 };
 
 /**
@@ -148,8 +145,7 @@ dwv.i18nGetLocalePath = function (filename) {
  * Warning: to be used once i18next is initialised.
  * @return {String} The path to the locale resource.
  */
-dwv.i18nGetFallbackLocalePath = function (filename) {
-    var lng = i18next.languages[i18next.languages.length-1].substr(0, 2);
-    return dwv.i18nLocalesPath +
-        "/locales/" + lng + "/" + filename;
+dwv.i18nGetFallbackLocalePath = function(filename) {
+  var lng = i18next.languages[i18next.languages.length - 1].substr(0, 2);
+  return dwv.i18nLocalesPath + '/locales/' + lng + '/' + filename;
 };
