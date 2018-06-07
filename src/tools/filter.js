@@ -52,7 +52,6 @@ dwv.tool.Filter = function(filterList, app) {
       for (var key in this.filterList) {
         this.filterList[key].setup();
         this.filterList[key].addEventListener('filter-run', fireEvent);
-        this.filterList[key].addEventListener('filter-undo', fireEvent);
       }
     }
   };
@@ -250,10 +249,7 @@ dwv.tool.filter.Threshold = function(app) {
     }
     var command = new dwv.tool.RunFilterCommand(filter, app);
     command.onExecute = fireEvent;
-    command.onUndo = fireEvent;
     command.execute();
-    // save command in undo stack
-    app.addToUndoStack(command);
   };
 
   /**
@@ -331,10 +327,7 @@ dwv.tool.filter.Sharpen = function(app) {
     filter.setOriginalImage(app.getImage());
     var command = new dwv.tool.RunFilterCommand(filter, app);
     command.onExecute = fireEvent;
-    command.onUndo = fireEvent;
     command.execute();
-    // save command in undo stack
-    app.addToUndoStack(command);
   };
 
   /**
@@ -412,10 +405,7 @@ dwv.tool.filter.Sobel = function(app) {
     filter.setOriginalImage(app.getImage());
     var command = new dwv.tool.RunFilterCommand(filter, app);
     command.onExecute = fireEvent;
-    command.onUndo = fireEvent;
     command.execute();
-    // save command in undo stack
-    app.addToUndoStack(command);
   };
 
   /**
@@ -471,18 +461,6 @@ dwv.tool.RunFilterCommand = function(filter, app) {
     // callback
     this.onExecute({ type: 'filter-run', id: this.getName() });
   };
-
-  /**
-   * Undo the command.
-   */
-  this.undo = function() {
-    // reset the image
-    app.setImage(filter.getOriginalImage());
-    // update display
-    app.render();
-    // callback
-    this.onUndo({ type: 'filter-undo', id: this.getName() });
-  };
 }; // RunFilterCommand class
 
 /**
@@ -490,12 +468,5 @@ dwv.tool.RunFilterCommand = function(filter, app) {
  * @param {Object} event The execute event with type and id.
  */
 dwv.tool.RunFilterCommand.prototype.onExecute = function(/*event*/) {
-  // default does nothing.
-};
-/**
- * Handle an undo event.
- * @param {Object} event The undo event with type and id.
- */
-dwv.tool.RunFilterCommand.prototype.onUndo = function(/*event*/) {
   // default does nothing.
 };

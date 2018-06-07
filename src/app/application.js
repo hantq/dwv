@@ -50,14 +50,8 @@ dwv.App = function() {
   var tags = null;
   var tagsGui = null;
 
-  // Drawing list gui
-  var drawListGui = null;
-
   // Image layer
   var imageLayer = null;
-
-  // Draw controller
-  var drawController = null;
 
   // Generic style
   var style = new dwv.html.Style();
@@ -69,9 +63,6 @@ dwv.App = function() {
   var loadbox = null;
   // Current loader
   var currentLoader = null;
-
-  // UndoStack
-  var undoStack = null;
 
   // listeners
   var listeners = {};
@@ -157,27 +148,11 @@ dwv.App = function() {
   };
 
   /**
-   * Get the draw controller.
-   * @return {Object} The controller.
-   */
-  this.getDrawController = function() {
-    return drawController;
-  };
-
-  /**
    * Get the image layer.
    * @return {Object} The image layer.
    */
   this.getImageLayer = function() {
     return imageLayer;
-  };
-
-  /**
-   * Get the draw stage.
-   * @return {Object} The draw stage.
-   */
-  this.getDrawStage = function() {
-    return drawController.getDrawStage();
   };
 
   /**
@@ -197,16 +172,6 @@ dwv.App = function() {
   };
 
   /**
-   * Add a command to the undo stack.
-   * @param {Object} The command to add.
-   */
-  this.addToUndoStack = function(cmd) {
-    if (undoStack !== null) {
-      undoStack.add(cmd);
-    }
-  };
-
-  /**
    * Initialise the HTML for the application.
    */
   this.init = function(config) {
@@ -217,30 +182,7 @@ dwv.App = function() {
       var toolList = {};
       for (var t = 0; t < config.tools.length; ++t) {
         var toolName = config.tools[t];
-        if (toolName === 'Draw') {
-          if (Array.isArray(config.shapes) && config.shapes.length > 0) {
-            // setup the shape list
-            var shapeList = {};
-            for (var s = 0; s < config.shapes.length; ++s) {
-              var shapeName = config.shapes[s];
-              var shapeFactoryClass = shapeName + 'Factory';
-              if (typeof dwv.tool[shapeFactoryClass] !== 'undefined') {
-                shapeList[shapeName] = dwv.tool[shapeFactoryClass];
-              } else {
-                console.warn('Could not initialise unknown shape: ' + shapeName);
-              }
-            }
-            toolList.Draw = new dwv.tool.Draw(this, shapeList);
-            toolList.Draw.addEventListener('draw-create', fireEvent);
-            toolList.Draw.addEventListener('draw-change', fireEvent);
-            toolList.Draw.addEventListener('draw-move', fireEvent);
-            toolList.Draw.addEventListener('draw-delete', fireEvent);
-          } else {
-            console.warn(
-              'Please provide a list of shapes in the application configuration to activate the Draw tool.'
-            );
-          }
-        } else if (toolName === 'Filter') {
+        if (toolName === 'Filter') {
           if (Array.isArray(config.filters) && config.filters.length > 0) {
             // setup the filter list
             var filterList = {};
@@ -254,7 +196,6 @@ dwv.App = function() {
             }
             toolList.Filter = new dwv.tool.Filter(filterList, this);
             toolList.Filter.addEventListener('filter-run', fireEvent);
-            toolList.Filter.addEventListener('filter-undo', fireEvent);
           } else {
             console.warn(
               'Please provide a list of filters in the application configuration to activate the Filter tool.'
@@ -303,22 +244,9 @@ dwv.App = function() {
         }
         loadbox.displayLoader(loaderKeys[0]);
       }
-      // undo
-      if (config.gui.indexOf('undo') !== -1) {
-        undoStack = new dwv.tool.UndoStack(this);
-        undoStack.setup();
-      }
       // DICOM Tags
       if (config.gui.indexOf('tags') !== -1) {
         tagsGui = new dwv.gui.DicomTags(this);
-      }
-      // Draw list
-      if (config.gui.indexOf('drawList') !== -1) {
-        drawListGui = new dwv.gui.DrawList(this);
-        // update list on draw events
-        this.addEventListener('draw-create', drawListGui.update);
-        this.addEventListener('draw-change', drawListGui.update);
-        this.addEventListener('draw-delete', drawListGui.update);
       }
       // version number
       if (config.gui.indexOf('version') !== -1) {
@@ -400,19 +328,10 @@ dwv.App = function() {
     if (toolboxController) {
       toolboxController.reset();
     }
-    // clear draw
-    if (drawController) {
-      drawController.reset();
-    }
     // clear objects
     image = null;
     view = null;
     isMonoSliceData = false;
-    // reset undo/redo
-    if (undoStack) {
-      undoStack = new dwv.tool.UndoStack(this);
-      undoStack.initialise();
-    }
   };
 
   /**
@@ -430,9 +349,6 @@ dwv.App = function() {
     if (imageLayer) {
       imageLayer.resetLayout(windowScale);
       imageLayer.draw();
-    }
-    if (drawController) {
-      drawController.resetStage(windowScale);
     }
     // fire events
     if (previousScale != scale) {
@@ -641,9 +557,6 @@ dwv.App = function() {
     loader.onload = function(data) {
       if (image) {
         view.append(data.view);
-        if (drawController) {
-          //drawController.appendDrawLayer(image.getNumberOfFrames());
-        }
       }
       postLoadInit(data);
     };
@@ -655,9 +568,6 @@ dwv.App = function() {
     };
     loader.onloadend = function(/*event*/) {
       window.onkeydown = previousOnKeyDown;
-      if (drawController) {
-        drawController.activateDrawLayer(viewController);
-      }
       fireEvent({
         type: 'load-progress',
         lengthComputable: true,
@@ -725,10 +635,6 @@ dwv.App = function() {
       imageLayer.setHeight(newHeight);
       imageLayer.zoom(scale, scale, 0, 0);
       imageLayer.draw();
-    }
-    // resize draw stage
-    if (drawController) {
-      drawController.resizeStage(newWidth, newHeight, scale);
     }
   };
 
@@ -831,68 +737,11 @@ dwv.App = function() {
   };
 
   /**
-   * Get the list of drawing display details.
-   * @return {Object} The list of draw details including id, slice, frame...
-   */
-  this.getDrawDisplayDetails = function() {
-    return drawController.getDrawDisplayDetails();
-  };
-
-  /**
    * Get the data tags.
    * @return {Object} The list of DICOM tags.
    */
   this.getTags = function() {
     return tags;
-  };
-
-  /**
-   * Get a list of drawing store details.
-   * @return {Object} A list of draw details including id, text, quant...
-   */
-  this.getDrawStoreDetails = function() {
-    return drawController.getDrawStoreDetails();
-  };
-  /**
-   * Set the drawings on the current stage.
-   * @param {Array} drawings An array of drawings.
-   * @param {Array} drawingsDetails An array of drawings details.
-   */
-  this.setDrawings = function(drawings, drawingsDetails) {
-    drawController.setDrawings(
-      drawings,
-      drawingsDetails,
-      fireEvent,
-      this.addToUndoStack
-    );
-    drawController.activateDrawLayer(viewController);
-  };
-  /**
-   * Update a drawing from its details.
-   * @param {Object} drawDetails Details of the drawing to update.
-   */
-  this.updateDraw = function(drawDetails) {
-    drawController.updateDraw(drawDetails);
-  };
-  /**
-   * Delete all Draws from all layers.
-   */
-  this.deleteDraws = function() {
-    drawController.deleteDraws(fireEvent, this.addToUndoStack);
-  };
-  /**
-   * Check the visibility of a given group.
-   * @param {Object} drawDetails Details of the drawing to check.
-   */
-  this.isGroupVisible = function(drawDetails) {
-    return drawController.isGroupVisible(drawDetails);
-  };
-  /**
-   * Toggle group visibility.
-   * @param {Object} drawDetails Details of the drawing to update.
-   */
-  this.toogleGroupVisibility = function(drawDetails) {
-    drawController.toogleGroupVisibility(drawDetails);
   };
 
   // Handler Methods -----------------------------------------------------------
@@ -925,9 +774,6 @@ dwv.App = function() {
    */
   this.onFrameChange = function(/*event*/) {
     generateAndDrawImage();
-    if (drawController) {
-      drawController.activateDrawLayer(viewController);
-    }
   };
 
   /**
@@ -936,15 +782,10 @@ dwv.App = function() {
    */
   this.onSliceChange = function(/*event*/) {
     generateAndDrawImage();
-    if (drawController) {
-      drawController.activateDrawLayer(viewController);
-    }
   };
 
   /**
    * Handle key down event.
-   * - CRTL-Z: undo
-   * - CRTL-Y: redo
    * - CRTL-ARROW_LEFT: next frame
    * - CRTL-ARROW_UP: next slice
    * - CRTL-ARROW_RIGHT: previous frame
@@ -970,12 +811,6 @@ dwv.App = function() {
         // crtl-arrow-down
         event.preventDefault();
         self.getViewController().decrementSliceNb();
-      } else if (event.keyCode === 89) {
-        // crtl-y
-        undoStack.redo();
-      } else if (event.keyCode === 90) {
-        // crtl-z
-        undoStack.undo();
       }
     }
   };
@@ -1042,17 +877,6 @@ dwv.App = function() {
   };
 
   /**
-   * Handle state save event.
-   * @param {Object} event The event fired when changing the state save field.
-   */
-  this.onStateSave = function(/*event*/) {
-    var state = new dwv.State();
-    // add href to link (html5)
-    var element = self.getElement('download-state');
-    element.href = 'data:application/json,' + state.toJSON(self);
-  };
-
-  /**
    * Handle colour map change. Will activate the tool using
    * the value property of the 'event.currentTarget'.
    * @param {Object} event The change event.
@@ -1077,15 +901,6 @@ dwv.App = function() {
    */
   this.onChangeTool = function(event) {
     toolboxController.setSelectedTool(event.currentTarget.value);
-  };
-
-  /**
-   * Handle shape change. Will activate the shape using
-   * the value property of the 'event.currentTarget'.
-   * @param {Object} event The change event.
-   */
-  this.onChangeShape = function(event) {
-    toolboxController.setSelectedShape(event.currentTarget.value);
   };
 
   /**
@@ -1121,22 +936,6 @@ dwv.App = function() {
    */
   this.onChangeMinMax = function(range) {
     toolboxController.setRange(range);
-  };
-
-  /**
-   * Handle undo.
-   * @param {Object} event The associated event.
-   */
-  this.onUndo = function(/*event*/) {
-    undoStack.undo();
-  };
-
-  /**
-   * Handle redo.
-   * @param {Object} event The associated event.
-   */
-  this.onRedo = function(/*event*/) {
-    undoStack.redo();
   };
 
   /**
@@ -1198,10 +997,6 @@ dwv.App = function() {
       imageLayer.zoom(scale, scale, scaleCenter.x, scaleCenter.y);
       imageLayer.draw();
     }
-    // draw layer
-    if (drawController) {
-      drawController.zoomStage(scale, scaleCenter);
-    }
     // fire event
     fireEvent({
       type: 'zoom-change',
@@ -1219,12 +1014,6 @@ dwv.App = function() {
     if (imageLayer) {
       imageLayer.translate(translation.x, translation.y);
       imageLayer.draw();
-      // draw layer
-      if (drawController) {
-        var ox = -imageLayer.getOrigin().x / scale - translation.x;
-        var oy = -imageLayer.getOrigin().y / scale - translation.y;
-        drawController.translateStage(ox, oy);
-      }
       // fire event
       fireEvent({
         type: 'offset-change',
@@ -1342,12 +1131,6 @@ dwv.App = function() {
     imageLayer.initialise(dataWidth, dataHeight);
     imageLayer.fillContext();
     imageLayer.setStyleDisplay(true);
-    // draw layer
-    var drawDiv = self.getElement('drawDiv');
-    if (drawDiv) {
-      drawController = new dwv.DrawController(drawDiv);
-      drawController.create(dataWidth, dataHeight);
-    }
     // resize app
     if (fitToWindow) {
       self.fitToSize(dwv.gui.getWindowSize());
@@ -1407,11 +1190,6 @@ dwv.App = function() {
     view.addEventListener('position-change', fireEvent);
     view.addEventListener('slice-change', fireEvent);
     view.addEventListener('frame-change', fireEvent);
-
-    // append draw layers (before initialising the toolbox)
-    if (drawController) {
-      //drawController.appendDrawLayer(image.getNumberOfFrames());
-    }
 
     // initialise the toolbox
     if (toolboxController) {

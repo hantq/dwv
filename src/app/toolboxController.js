@@ -74,14 +74,6 @@ dwv.ToolboxController = function() {
   };
 
   /**
-   * Set the selected shape.
-   * @param {String} name The name of the shape.
-   */
-  this.setSelectedShape = function(name) {
-    toolbox.getSelectedTool().setShapeName(name);
-  };
-
-  /**
    * Set the selected filter.
    * @param {String} name The name of the filter.
    */
