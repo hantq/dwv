@@ -192,21 +192,3 @@ dwv.tool.WindowLevel = function(app) {
     return true;
   };
 }; // WindowLevel class
-
-/**
- * Help for this tool.
- * @return {Object} The help content.
- */
-dwv.tool.WindowLevel.prototype.getHelp = function() {
-  return {
-    title: dwv.i18n('tool.WindowLevel.name'),
-    brief: dwv.i18n('tool.WindowLevel.brief'),
-    mouse: {
-      mouse_drag: dwv.i18n('tool.WindowLevel.mouse_drag'),
-      double_click: dwv.i18n('tool.WindowLevel.double_click'),
-    },
-    touch: {
-      touch_drag: dwv.i18n('tool.WindowLevel.touch_drag'),
-    },
-  };
-};

@@ -67,9 +67,6 @@ dwv.App = function() {
   // listeners
   var listeners = {};
 
-  // help resources path
-  var helpResourcesPath = './';
-
   /**
    * Get the image.
    * @return {Image} The associated image.
@@ -164,14 +161,6 @@ dwv.App = function() {
   };
 
   /**
-   * Get the help resources path.
-   * @return {String} The path.
-   */
-  this.getHelpResourcesPath = function() {
-    return helpResourcesPath;
-  };
-
-  /**
    * Initialise the HTML for the application.
    */
   this.init = function(config) {
@@ -251,18 +240,6 @@ dwv.App = function() {
       // version number
       if (config.gui.indexOf('version') !== -1) {
         dwv.gui.appendVersionHtml(dwv.getVersion());
-      }
-      // help
-      if (config.gui.indexOf('help') !== -1) {
-        var isMobile = true;
-        if (config.isMobile !== 'undefined') {
-          isMobile = config.isMobile;
-        }
-        // help resources path
-        if (typeof config.helpResourcesPath !== 'undefined') {
-          helpResourcesPath = config.helpResourcesPath;
-        }
-        dwv.gui.appendHelpHtml(toolboxController.getToolList(), isMobile, this);
       }
     }
 

@@ -126,17 +126,6 @@ dwv.tool.Filter = function(filterList, app) {
 }; // class dwv.tool.Filter
 
 /**
- * Help for this tool.
- * @return {Object} The help content.
- */
-dwv.tool.Filter.prototype.getHelp = function() {
-  return {
-    title: dwv.i18n('tool.Filter.name'),
-    brief: dwv.i18n('tool.Filter.brief'),
-  };
-};
-
-/**
  * Get the selected filter.
  * @return {Object} The selected filter.
  */

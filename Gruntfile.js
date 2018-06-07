@@ -4,12 +4,6 @@ module.exports = function(grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        jshint: {
-            files: ['Gruntfile.js', 'src/**/*.js', 'tests/**/*.js', 'viewers/mobile/src/*.js'],
-            options: {
-                jshintrc: '.jshintrc'
-            }
-        },
         qunit: {
             all: ['tests/index.html'],
             options: {
@@ -52,16 +46,6 @@ module.exports = function(grunt) {
                 }
             }
         },
-        jsdoc: {
-            dist : {
-                src: ['src/**/*.js', 'tests/**/*.js', 'resources/doc/readme-doc.md'],
-                options: {
-                    destination: 'build/doc',
-                    template: 'node_modules/ink-docstrap/template',
-                    configure: 'resources/doc/jsdoc.conf.json'
-                }
-            }
-        },
         copy: {
             main: {
                 files: [
@@ -77,14 +61,6 @@ module.exports = function(grunt) {
             }
         },
         watch: {
-            main: {
-                files: ['**/*.js', '!**/node_modules/**'],
-                tasks: ['jshint'],
-                options: {
-                    spawn: false,
-                    livereload: true
-                }
-            },
             cmd: {
                 files: ['**/*.js', '!**/node_modules/**'],
                 tasks: ['test'],
@@ -115,18 +91,15 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-coveralls');
-    grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-qunit-istanbul');
 
     // tasks
-    grunt.registerTask('test', ['jshint', 'qunit']);
-    grunt.registerTask('start', ['connect', 'watch:main']);
+    grunt.registerTask('test', ['qunit']);
+    grunt.registerTask('start', ['connect']);
     grunt.registerTask('start-cmd', ['watch:cmd']);
     grunt.registerTask('dev', ['watch:dev']);
     grunt.registerTask('build', ['concat', 'uglify']);
-    grunt.registerTask('doc', ['jsdoc']);
 };

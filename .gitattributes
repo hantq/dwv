@@ -16,7 +16,6 @@
 .gitignore text
 
 # misc config
-.jshintrc text
 .project text
 *.epf text
 *.webapp text
