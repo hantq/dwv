@@ -351,7 +351,7 @@ dwv.App = function() {
       imageLayer.draw();
     }
     // fire events
-    if (previousScale != scale) {
+    if (previousScale !== scale) {
       fireEvent({
         type: 'zoom-change',
         scale: scale,
