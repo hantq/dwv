@@ -24,9 +24,6 @@ dwv.gui.getElement = dwv.gui.base.getElement;
 // Progress
 dwv.gui.displayProgress = function (/*percent*/) {};
 
-// check browser support
-dwv.browser.check();
-
 // test data line
 dwv.addDataLine = function (id, fileroot, doc)
 {

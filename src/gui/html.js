@@ -430,10 +430,7 @@ dwv.html.makeCellEditable = function(cell, onchange, inputType) {
   // set input value
   input.value = cell.firstChild.data;
   // input type
-  if (
-    typeof inputType === 'undefined' ||
-    (inputType === 'color' && !dwv.browser.hasInputColor())
-  ) {
+  if (typeof inputType === 'undefined') {
     input.type = 'text';
   } else {
     input.type = inputType;

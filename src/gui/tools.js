@@ -183,11 +183,7 @@ dwv.gui.base.Draw = function(app) {
    * Get the default colour.
    */
   this.getDefaultColour = function() {
-    if (dwv.browser.hasInputColor()) {
-      return '#FFFF80';
-    } else {
-      return colours[0];
-    }
+    return '#FFFF80';
   };
 
   /**
@@ -203,18 +199,10 @@ dwv.gui.base.Draw = function(app) {
     shapeSelector.onchange = app.onChangeShape;
     // colour select
     var colourSelector = null;
-    if (dwv.browser.hasInputColor()) {
-      colourSelector = document.createElement('input');
-      colourSelector.className = 'colourSelect';
-      colourSelector.type = 'color';
-      colourSelector.value = '#FFFF80';
-    } else {
-      colourSelector = dwv.html.createHtmlSelect(
-        'colourSelect',
-        colours,
-        'colour'
-      );
-    }
+    colourSelector = document.createElement('input');
+    colourSelector.className = 'colourSelect';
+    colourSelector.type = 'color';
+    colourSelector.value = '#FFFF80';
     colourSelector.onchange = app.onChangeLineColour;
 
     // shape list element
@@ -265,9 +253,6 @@ dwv.gui.base.Draw = function(app) {
 
     // colour select: reset selected option
     var colourSelector = app.getElement('colourSelect');
-    if (!dwv.browser.hasInputColor()) {
-      colourSelector.selectedIndex = 0;
-    }
     // refresh
     dwv.gui.refreshElement(colourSelector);
   };
@@ -298,11 +283,7 @@ dwv.gui.base.ColourTool = function(app, prefix) {
    * Get the default colour.
    */
   this.getDefaultColour = function() {
-    if (dwv.browser.hasInputColor()) {
-      return '#FFFF80';
-    } else {
-      return colours[0];
-    }
+    return '#FFFF80';
   };
 
   /**
@@ -311,18 +292,10 @@ dwv.gui.base.ColourTool = function(app, prefix) {
   this.setup = function() {
     // colour select
     var colourSelector = null;
-    if (dwv.browser.hasInputColor()) {
-      colourSelector = document.createElement('input');
-      colourSelector.className = colourSelectClassName;
-      colourSelector.type = 'color';
-      colourSelector.value = '#FFFF80';
-    } else {
-      colourSelector = dwv.html.createHtmlSelect(
-        colourSelectClassName,
-        colours,
-        'colour'
-      );
-    }
+    colourSelector = document.createElement('input');
+    colourSelector.className = colourSelectClassName;
+    colourSelector.type = 'color';
+    colourSelector.value = '#FFFF80';
     colourSelector.onchange = app.onChangeLineColour;
 
     // colour list element
@@ -355,9 +328,6 @@ dwv.gui.base.ColourTool = function(app, prefix) {
    */
   this.initialise = function() {
     var colourSelector = app.getElement(colourSelectClassName);
-    if (!dwv.browser.hasInputColor()) {
-      colourSelector.selectedIndex = 0;
-    }
     dwv.gui.refreshElement(colourSelector);
   };
 }; // class dwv.gui.base.ColourTool
