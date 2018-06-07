@@ -2,23 +2,22 @@
   "name": "dwv",
   "version": "0.24.0-beta",
   "description": "DICOM Web Viewer.",
+  "main": "dist/dwv.common.js",
+  "module": "dist/dwv.esm.js",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "dev": "rollup -w -c scripts/config.js --environment TARGET:dev",
+    "dev:cjs": "rollup -w -c scripts/config.js --environment TARGET:cjs",
+    "dev:esm": "rollup -w -c scripts/config.js --environment TARGET:esm",
+    "build": "node scripts/build.js",
+    "build:origin": "grunt build --verbose"
+  },
   "keywords": [
     "DICOM",
-    "medical",
-    "imaging"
+    "medical"
   ],
-  "license": "GPL-3.0",
-  "author": "ivmartel <ivmartel@gmail.com>",
-  "homepage": "https://ivmartel.github.io/dwv/",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/ivmartel/dwv.git"
-  },
-  "main": "dist/dwv.min.js",
-  "dependencies": {
-    "i18next": "~11.3.2",
-    "jszip": "~3.1.5"
-  },
   "devDependencies": {
     "grunt": "~1.0.3",
     "grunt-cli": "~1.2",
@@ -26,11 +25,14 @@
     "grunt-contrib-connect": "~1.0.2",
     "grunt-contrib-uglify": "~3.3.0",
     "grunt-contrib-watch": "~1.1.0",
-    "http-server": "^0.11.1"
+    "http-server": "^0.11.1",
+    "rollup": "^0.60.1",
+    "rollup-plugin-buble": "^0.19.2",
+    "uglify-js": "^3.4.0",
+    "zlib": "^1.0.5"
   },
-  "scripts": {
-    "start": "grunt start",
-    "dev": "grunt dev",
-    "build": "grunt build --verbose"
+  "dependencies": {
+    "i18next": "~11.3.2",
+    "jszip": "~3.1.5"
   }
 }
