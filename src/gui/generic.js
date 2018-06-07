@@ -131,10 +131,10 @@ dwv.gui.base.Slider = function(app) {
     // append to document
     app.getElement('thresholdLi').appendChild(div);
     // bind change
-    $('#threshold-div').on('change', function(/*event*/) {
+    document.getElementById('threshold-div').addEventListener('change', function() {
       app.onChangeMinMax({
-        min: $('#threshold-min').val(),
-        max: $('#threshold-max').val(),
+        min: document.getElementById('threshold-min').getAttribute('value'),
+        max: document.getElementById('threshold-max').getAttribute('value'),
       });
     });
     // refresh
