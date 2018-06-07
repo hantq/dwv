@@ -12,6 +12,7 @@
     );
   }
 })(this, function(i18next, JSZip) {
+  /* eslint-disable no-restricted-globals */
   // similar to what browserify does but reversed
   // https://www.contentful.com/blog/2017/01/17/the-global-object-in-javascript/
   var window =
