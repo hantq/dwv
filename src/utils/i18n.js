@@ -2,38 +2,32 @@
 var dwv = dwv || {};
 // external
 var i18next = i18next || {};
-var i18nextXHRBackend = i18nextXHRBackend || {};
 
 // This is mainly a wrapper around the i18next object.
 // see its API: http://i18next.com/docs/api/
 
 // global locales path
-dwv.i18nLocalesPath = null;
+dwv.i18nLocalesPath = '';
 
 /**
  * Initialise i18n.
  * @param {String} language The language to translate to, values are 'en' or 'zh'. Defaults to 'en'.
  * @param {String} localesPath Path to the locales directory.
  * @external i18next
- * @external i18nextXHRBackend
  */
 dwv.i18nInitialise = function(language, localesPath) {
   var lng = typeof language === 'undefined' ? 'en' : language;
   var lpath = typeof localesPath === 'undefined' ? '../..' : localesPath;
-  // store as global
-  dwv.i18nLocalesPath = lpath;
-  // i18n options: default 'en' language and
-  //  only load language, not specialised (for ex en-GB)
   var options = {
+    backend: { loadPath: lpath + '/locales/{{lng}}/{{ns}}.json' },
     fallbackLng: 'en',
     lng: lng,
     load: 'languageOnly',
-    backend: { loadPath: lpath + '/locales/{{lng}}/{{ns}}.json' },
   };
-  // use the XHR backend to get translation files
-  var i18n = i18next.use(i18nextXHRBackend);
-  // init i18n: will be ready when the 'loaded' event is fired
-  i18n.init(options);
+
+  dwv.i18nLocalesPath = lpath;
+
+  i18next.init(options);
 };
 
 /**
@@ -45,17 +39,14 @@ dwv.i18nInitialise = function(language, localesPath) {
  */
 dwv.i18nInitialiseWithResources = function(language, resources) {
   var lng = typeof language === 'undefined' ? 'en' : language;
-  // i18n options: default 'en' language and
-  //  only load language, not specialised (for ex en-GB)
   var options = {
     fallbackLng: 'en',
     lng: lng,
     load: 'languageOnly',
     resources: resources,
   };
-  // use browser language or the specified one
-  // init i18n: will be ready when the 'loaded' event is fired
-  i18n.init(options);
+
+  i18next.init(options);
 };
 
 /**

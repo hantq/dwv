@@ -20,7 +20,7 @@ dwv.App = function() {
   // Image data height
   var dataHeight = 0;
   // Is the data mono-slice?
-  var isMonoSliceData = 0;
+  var isMonoSliceData = false;
 
   // Default character set
   var defaultCharacterSet;
@@ -212,16 +212,13 @@ dwv.App = function() {
   this.init = function(config) {
     containerDivId = config.containerDivId;
     // tools
-    if (config.tools && config.tools.length !== 0) {
+    if (Array.isArray(config.tools) && config.tools.length > 0) {
       // setup the tool list
       var toolList = {};
       for (var t = 0; t < config.tools.length; ++t) {
         var toolName = config.tools[t];
         if (toolName === 'Draw') {
-          if (
-            typeof config.shapes !== 'undefined' &&
-            config.shapes.length !== 0
-          ) {
+          if (Array.isArray(config.shapes) && config.shapes.length > 0) {
             // setup the shape list
             var shapeList = {};
             for (var s = 0; s < config.shapes.length; ++s) {
@@ -230,9 +227,7 @@ dwv.App = function() {
               if (typeof dwv.tool[shapeFactoryClass] !== 'undefined') {
                 shapeList[shapeName] = dwv.tool[shapeFactoryClass];
               } else {
-                console.warn(
-                  'Could not initialise unknown shape: ' + shapeName
-                );
+                console.warn('Could not initialise unknown shape: ' + shapeName);
               }
             }
             toolList.Draw = new dwv.tool.Draw(this, shapeList);
@@ -246,10 +241,7 @@ dwv.App = function() {
             );
           }
         } else if (toolName === 'Filter') {
-          if (
-            typeof config.filters !== 'undefined' &&
-            config.filters.length !== 0
-          ) {
+          if (Array.isArray(config.filters) && config.filters.length > 0) {
             // setup the filter list
             var filterList = {};
             for (var f = 0; f < config.filters.length; ++f) {
@@ -257,9 +249,7 @@ dwv.App = function() {
               if (typeof dwv.tool.filter[filterName] !== 'undefined') {
                 filterList[filterName] = new dwv.tool.filter[filterName](this);
               } else {
-                console.warn(
-                  'Could not initialise unknown filter: ' + filterName
-                );
+                console.warn('Could not initialise unknown filter: ' + filterName);
               }
             }
             toolList.Filter = new dwv.tool.Filter(filterList, this);
