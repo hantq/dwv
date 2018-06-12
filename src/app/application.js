@@ -43,13 +43,6 @@ dwv.App = function() {
   // View controller
   var viewController = null;
 
-  // Info layer controller
-  var infoController = null;
-
-  // Dicom tags gui
-  var tags = null;
-  var tagsGui = null;
-
   // Image layer
   var imageLayer = null;
 
@@ -232,10 +225,6 @@ dwv.App = function() {
           loaderList[loaderKeys[lk]].setup();
         }
         loadbox.displayLoader(loaderKeys[0]);
-      }
-      // DICOM Tags
-      if (config.gui.indexOf('tags') !== -1) {
-        tagsGui = new dwv.gui.DicomTags(this);
       }
       // version number
       if (config.gui.indexOf('version') !== -1) {
@@ -616,17 +605,6 @@ dwv.App = function() {
   };
 
   /**
-   * Toggle the display of the information layer.
-   */
-  this.toggleInfoLayerDisplay = function() {
-    // toggle html
-    var infoLayer = self.getElement('infoLayer');
-    dwv.html.toggleDisplay(infoLayer);
-    // toggle listeners
-    infoController.toggleListeners(self, view);
-  };
-
-  /**
    * Init the Window/Level display
    */
   this.initWLDisplay = function() {
@@ -916,14 +894,6 @@ dwv.App = function() {
   };
 
   /**
-   * Handle toggle of info layer.
-   * @param {Object} event The associated event.
-   */
-  this.onToggleInfoLayer = function(/*event*/) {
-    self.toggleInfoLayerDisplay();
-  };
-
-  /**
    * Handle display reset.
    * @param {Object} event The change event.
    */
@@ -1135,11 +1105,6 @@ dwv.App = function() {
     view = data.view;
     viewController = new dwv.ViewController(view);
 
-    // append the DICOM tags table
-    tags = data.info;
-    if (tagsGui) {
-      tagsGui.update(data.info);
-    }
     // store image
     originalImage = view.getImage();
     image = originalImage;
@@ -1185,14 +1150,6 @@ dwv.App = function() {
       div.addEventListener('dragover', onDragOver);
       div.addEventListener('dragleave', onDragLeave);
       div.addEventListener('drop', onDrop);
-    }
-
-    // info layer
-    var infoLayer = self.getElement('infoLayer');
-    if (infoLayer) {
-      infoController = new dwv.InfoController(containerDivId);
-      infoController.create(self);
-      infoController.toggleListeners(self, view);
     }
 
     // init W/L display

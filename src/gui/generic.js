@@ -11,36 +11,10 @@ dwv.gui.base.getWindowSize = function() {
 };
 
 /**
- * Ask some text to the user.
- * @param {String} message Text to display to the user.
- * @param {String} defaultText Default value displayed in the text input field.
- * @return {String} Text entered by the user.
- */
-dwv.gui.base.prompt = function(message, defaultText) {
-  return prompt(message, defaultText);
-};
-
-/**
  * Display a progress value.
  * @param {Number} percent The progress percentage.
  */
 dwv.gui.base.displayProgress = function(/*percent*/) {
-  // default does nothing...
-};
-
-/**
- * Focus the view on the image.
- */
-dwv.gui.base.focusImage = function() {
-  // default does nothing...
-};
-
-/**
- * Post process a HTML table.
- * @param {Object} table The HTML table to process.
- * @return The processed HTML table.
- */
-dwv.gui.base.postProcessTable = function(/*table*/) {
   // default does nothing...
 };
 
@@ -162,57 +136,3 @@ dwv.gui.base.Slider = function(app) {
     dwv.gui.refreshElement(app.getElement('toolList'));
   };
 }; // class dwv.gui.base.Slider
-
-/**
- * DICOM tags base gui.
- * @param {Object} app The associated application.
- * @constructor
- */
-dwv.gui.base.DicomTags = function(app) {
-  /**
-   * Update the DICOM tags table with the input info.
-   * @param {Object} dataInfo The data information.
-   */
-  this.update = function(dataInfo) {
-    // HTML node
-    var node = app.getElement('tags');
-    if (node === null) {
-      console.warn('Cannot find a node to append the DICOM tags.');
-      return;
-    }
-    // remove possible previous
-    while (node.hasChildNodes()) {
-      node.removeChild(node.firstChild);
-    }
-
-    // exit if no tags
-    if (dataInfo.length === 0) {
-      console.warn('No DICOM tags to show.');
-      return;
-    }
-
-    // tags HTML table
-    var table = dwv.html.toTable(dataInfo);
-    table.className = 'tagsTable';
-
-    // optional gui specific table post process
-    dwv.gui.postProcessTable(table);
-
-    // check processed table
-    if (table.rows.length === 0) {
-      console.warn('The processed table does not contain data.');
-      return;
-    }
-
-    // translate first row
-    dwv.html.translateTableRow(table.rows.item(0));
-
-    // append search form
-    node.appendChild(dwv.html.getHtmlSearchForm(table));
-    // append tags table
-    node.appendChild(table);
-
-    // refresh
-    dwv.gui.refreshElement(node);
-  };
-}; // class dwv.gui.base.DicomTags
