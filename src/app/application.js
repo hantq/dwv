@@ -691,14 +691,6 @@ dwv.App = function() {
     translateLayers();
   };
 
-  /**
-   * Get the data tags.
-   * @return {Object} The list of DICOM tags.
-   */
-  this.getTags = function() {
-    return tags;
-  };
-
   // Handler Methods -----------------------------------------------------------
 
   /**
