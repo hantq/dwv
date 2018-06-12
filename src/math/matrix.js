@@ -1,14 +1,16 @@
-// namespaces
-var dwv = dwv || {};
-dwv.math = dwv.math || {};
+// dwv.math.Matrix33
+// dwv.math.getIdentityMat33
+
+import Vector3D from './vector';
 
 /**
  * Immutable 3x3 Matrix.
  * @constructor
  */
-dwv.math.Matrix33 = function(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
+export const Matrix33 = function(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
   // row-major order
-  var mat = new Float32Array(9);
+  const mat = new Float32Array(9);
+
   mat[0] = m00;
   mat[1] = m01;
   mat[2] = m02;
@@ -34,7 +36,7 @@ dwv.math.Matrix33 = function(m00, m01, m02, m10, m11, m12, m20, m21, m22) {
  * @param {Object} rhs The other matrix to compare to.
  * @return {Boolean} True if both matrices are equal.
  */
-dwv.math.Matrix33.prototype.equals = function(rhs) {
+Matrix33.prototype.equals = function(rhs) {
   return (
     this.get(0, 0) === rhs.get(0, 0) &&
     this.get(0, 1) === rhs.get(0, 1) &&
@@ -52,7 +54,7 @@ dwv.math.Matrix33.prototype.equals = function(rhs) {
  * Get a string representation of the Matrix33.
  * @return {String} The matrix as a string.
  */
-dwv.math.Matrix33.prototype.toString = function() {
+Matrix33.prototype.toString = function() {
   return (
     '[' +
     this.get(0, 0) +
@@ -81,7 +83,7 @@ dwv.math.Matrix33.prototype.toString = function() {
  * @param {Object} vector3D The input 3D vector
  * @return {Object} The result 3D vector
  */
-dwv.math.Matrix33.multiplyVector3D = function(vector3D) {
+Matrix33.multiplyVector3D = function(vector3D) {
   // cache matrix values
   var m00 = this.get(0, 0);
   var m01 = this.get(0, 1);
@@ -97,7 +99,7 @@ dwv.math.Matrix33.multiplyVector3D = function(vector3D) {
   var vy = vector3D.getY();
   var vz = vector3D.getZ();
   // calculate
-  return new dwv.math.Vector3D(
+  return new Vector3D(
     m00 * vx + m01 * vy + m02 * vz,
     m10 * vx + m11 * vy + m12 * vz,
     m20 * vx + m21 * vy + m22 * vz
@@ -108,6 +110,6 @@ dwv.math.Matrix33.multiplyVector3D = function(vector3D) {
  * Create a 3x3 identity matrix.
  * @return {Object} The identity matrix.
  */
-dwv.math.getIdentityMat33 = function() {
-  return new dwv.math.Matrix33(1, 0, 0, 0, 1, 0, 0, 0, 1);
+export const getIdentityMat33 = function() {
+  return new Matrix33(1, 0, 0, 0, 1, 0, 0, 0, 1);
 };

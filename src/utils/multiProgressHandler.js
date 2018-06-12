@@ -1,6 +1,4 @@
-// namespaces
-var dwv = dwv || {};
-dwv.utils = dwv.utils || {};
+// dwv.utils.MultiProgressHandler
 
 /**
  * Multiple progresses handler.
@@ -8,7 +6,7 @@ dwv.utils = dwv.utils || {};
  * calculate a global progress.
  * @param {Function} callback The function to pass the global progress to.
  */
-dwv.utils.MultiProgressHandler = function(callback) {
+const MultiProgressHandler = function(callback) {
   // closure to self
   var self = this;
 
@@ -17,14 +15,14 @@ dwv.utils.MultiProgressHandler = function(callback) {
    * @private
    * @type Array
    */
-  var progresses = [];
+  const progresses = [];
 
   /**
    * Number of dimensions.
    * @private
    * @type Number
    */
-  var numberOfDimensions = 2;
+  let numberOfDimensions = 2;
 
   /**
    * Set the number of dimensions.
@@ -39,9 +37,10 @@ dwv.utils.MultiProgressHandler = function(callback) {
    * @param {Number} n The number of data to load.
    */
   this.setNToLoad = function(n) {
-    for (var i = 0; i < n; ++i) {
+    for (let i = 0; i < n; ++i) {
       progresses[i] = [];
-      for (var j = 0; j < numberOfDimensions; ++j) {
+
+      for (let j = 0; j < numberOfDimensions; ++j) {
         progresses[i][j] = 0;
       }
     }
@@ -52,28 +51,25 @@ dwv.utils.MultiProgressHandler = function(callback) {
    * @param {Object} event The progress event.
    */
   this.onprogress = function(event) {
-    // check event
     if (!event.lengthComputable) {
       return;
     }
-    if (typeof event.subindex === 'undefined') {
+
+    if (typeof event.index === 'undefined' || typeof event.subindex === 'undefined') {
       return;
     }
-    if (typeof event.index === 'undefined') {
-      return;
-    }
-    // calculate percent
-    var percent = event.loaded * 100 / event.total;
-    // set percent for index
+
+    const percent = event.loaded * 100 / event.total;
     progresses[event.index][event.subindex] = percent;
 
-    // call callback
-    callback({
-      type: event.type,
-      lengthComputable: true,
-      loaded: getGlobalPercent(),
-      total: 100,
-    });
+    if (typeof callback === 'function') {
+      callback({
+        type: event.type,
+        lengthComputable: true,
+        loaded: getGlobalPercent(),
+        total: 100,
+      });
+    }
   };
 
   /**
@@ -81,13 +77,15 @@ dwv.utils.MultiProgressHandler = function(callback) {
    * @return {Number} The accumulated percentage.
    */
   function getGlobalPercent() {
-    var sum = 0;
-    var lenprog = progresses.length;
-    for (var i = 0; i < lenprog; ++i) {
-      for (var j = 0; j < numberOfDimensions; ++j) {
+    const lenprog = progresses.length;
+    let sum = 0;
+
+    for (let i = 0; i < lenprog; ++i) {
+      for (let j = 0; j < numberOfDimensions; ++j) {
         sum += progresses[i][j];
       }
     }
+
     return Math.round(sum / (lenprog * numberOfDimensions));
   }
 
@@ -134,3 +132,5 @@ dwv.utils.MultiProgressHandler = function(callback) {
     };
   };
 };
+
+export default MultiProgressHandler;

@@ -1,9 +1,29 @@
-# dependencies
-node_modules
+# Logs
+logs
+*.log
+npm-debug.log*
 
-# build
-build
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 
-# misc
-npm-debug.log
-yarn-error.log
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+package-lock.json
+
+# Optional eslint cache
+.eslintcache
+
+# WebStorm
+.idea
+
+# File System
+*.DS_Store
+
+# Generated native files
+dist/

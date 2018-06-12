@@ -1,13 +1,14 @@
-// namespaces
-var dwv = dwv || {};
-dwv.tool = dwv.tool || {};
+// dwv.tool.ZoomAndPan
+
+import Line from '../math/line';
+import { Point2D } from '../math/point';
 
 /**
  * ZoomAndPan class.
  * @constructor
  * @param {Object} app The associated application.
  */
-dwv.tool.ZoomAndPan = function(app) {
+const ZoomAndPan = function(app) {
   /**
    * Closure to self: to be used by event handlers.
    * @private
@@ -46,9 +47,9 @@ dwv.tool.ZoomAndPan = function(app) {
     self.x0 = event._x;
     self.y0 = event._y;
     // first line
-    var point0 = new dwv.math.Point2D(event._x, event._y);
-    var point1 = new dwv.math.Point2D(event._x1, event._y1);
-    self.line0 = new dwv.math.Line(point0, point1);
+    var point0 = new Point2D(event._x, event._y);
+    var point1 = new Point2D(event._x1, event._y1);
+    self.line0 = new Line(point0, point1);
     self.midPoint = self.line0.getMidpoint();
   };
 
@@ -79,9 +80,9 @@ dwv.tool.ZoomAndPan = function(app) {
     if (!self.started) {
       return;
     }
-    var point0 = new dwv.math.Point2D(event._x, event._y);
-    var point1 = new dwv.math.Point2D(event._x1, event._y1);
-    var newLine = new dwv.math.Line(point0, point1);
+    var point0 = new Point2D(event._x, event._y);
+    var point1 = new Point2D(event._x1, event._y1);
+    var newLine = new Line(point0, point1);
     var lineRatio = newLine.getLength() / self.line0.getLength();
 
     if (lineRatio === 1) {
@@ -210,6 +211,8 @@ dwv.tool.ZoomAndPan = function(app) {
 /**
  * Initialise the tool.
  */
-dwv.tool.ZoomAndPan.prototype.init = function() {
+ZoomAndPan.prototype.init = function() {
   return true;
 };
+
+export default ZoomAndPan;

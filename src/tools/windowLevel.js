@@ -1,13 +1,11 @@
-// namespaces
-var dwv = dwv || {};
-dwv.tool = dwv.tool || {};
+// dwv.tool.WindowLevel
 
 /**
  * WindowLevel tool: handle window/level related events.
  * @constructor
  * @param {Object} app The associated application.
  */
-dwv.tool.WindowLevel = function(app) {
+const WindowLevel = function(app) {
   /**
    * Closure to self: to be used by event handlers.
    * @private
@@ -192,3 +190,5 @@ dwv.tool.WindowLevel = function(app) {
     return true;
   };
 }; // WindowLevel class
+
+export default WindowLevel;

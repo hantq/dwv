@@ -1,6 +1,6 @@
-// namespaces
-var dwv = dwv || {};
-dwv.math = dwv.math || {};
+// dwv.math.Line
+
+import { Point2D } from './point';
 
 /**
  * Line shape.
@@ -8,7 +8,7 @@ dwv.math = dwv.math || {};
  * @param {Object} begin A Point2D representing the beginning of the line.
  * @param {Object} end A Point2D representing the end of the line.
  */
-dwv.math.Line = function(begin, end) {
+const Line = function(begin, end) {
   /**
    * Line delta in the X direction.
    * @private
@@ -84,7 +84,7 @@ dwv.math.Line = function(begin, end) {
    * @return {Object} The mid point of the line.
    */
   this.getMidpoint = function() {
-    return new dwv.math.Point2D(
+    return new Point2D(
       parseInt((begin.getX() + end.getX()) / 2, 10),
       parseInt((begin.getY() + end.getY()) / 2, 10)
     );
@@ -114,3 +114,5 @@ dwv.math.Line = function(begin, end) {
     return 180 - angle;
   };
 }; // Line class
+
+export default Line;

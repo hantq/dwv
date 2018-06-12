@@ -1,11 +1,8 @@
-/** @namespace */
-var dwv = dwv || {};
-
 /**
  * Main application class.
  * @constructor
  */
-dwv.App = function() {
+const App = function() {
   // Local object
   var self = this;
 
@@ -247,24 +244,6 @@ dwv.App = function() {
       );
     }
 
-    // possible load from URL
-    if (typeof config.skipLoadUrl === 'undefined') {
-      var query = dwv.utils.getUriQuery(window.location.href);
-      // check query
-      if (query && typeof query.input !== 'undefined') {
-        dwv.utils.decodeQuery(query, this.onInputURLs);
-        // optional display state
-        if (typeof query.state !== 'undefined') {
-          var onLoadEnd = function(/*event*/) {
-            loadStateUrl(query.state);
-          };
-          this.addEventListener('load-end', onLoadEnd);
-        }
-      }
-    } else {
-      console.log('Not loading url from address since skipLoadUrl is defined.');
-    }
-
     // align layers when the window is resized
     if (config.fitToWindow) {
       fitToWindow = true;
@@ -409,24 +388,6 @@ dwv.App = function() {
   }
 
   /**
-   * Load a list of URLs. Can be image files or a state file.
-   * @param {Array} urls The list of urls to load.
-   * @param {Array} requestHeaders An array of {name, value} to use as request headers.
-   */
-  this.loadURLs = function(urls, requestHeaders) {
-    // has been checked for emptiness.
-    var ext = urls[0]
-      .split('.')
-      .pop()
-      .toLowerCase();
-    if (ext === 'json') {
-      loadStateUrl(urls[0], requestHeaders);
-    } else {
-      loadImageUrls(urls, requestHeaders);
-    }
-  };
-
-  /**
    * Abort the current load.
    */
   this.abortLoad = function() {
@@ -449,36 +410,6 @@ dwv.App = function() {
     // load data
     loadImageData(data, memoryIO, options);
   };
-
-  /**
-   * Load a list of image URLs.
-   * @private
-   * @param {Array} urls The list of urls to load.
-   * @param {Array} requestHeaders An array of {name, value} to use as request headers.
-   */
-  function loadImageUrls(urls, requestHeaders) {
-    // create IO
-    var urlIO = new dwv.io.UrlsLoader();
-    // create options
-    var options = { requestHeaders: requestHeaders };
-    // load data
-    loadImageData(urls, urlIO, options);
-  }
-
-  /**
-   * Load a State url.
-   * @private
-   * @param {String} url The state url to load.
-   * @param {Array} requestHeaders An array of {name, value} to use as request headers.
-   */
-  function loadStateUrl(url, requestHeaders) {
-    // create IO
-    var urlIO = new dwv.io.UrlsLoader();
-    // create options
-    var options = { requestHeaders: requestHeaders };
-    // load data
-    loadStateData([url], urlIO, options);
-  }
 
   /**
    * Load a list of image data.
@@ -793,23 +724,6 @@ dwv.App = function() {
    */
   this.resetLoadbox = function() {
     loadbox.reset();
-  };
-
-  /**
-   * Handle change url event.
-   * @param {Object} event The event fired when changing the url field.
-   */
-  this.onChangeURL = function(event) {
-    self.loadURLs([event.target.value]);
-  };
-
-  /**
-   * Handle input urls.
-   * @param {Array} urls The list of input urls.
-   * @param {Array} requestHeaders An array of {name, value} to use as request headers.
-   */
-  this.onInputURLs = function(urls, requestHeaders) {
-    self.loadURLs(urls, requestHeaders);
   };
 
   /**
@@ -1150,3 +1064,5 @@ dwv.App = function() {
     generateAndDrawImage();
   }
 };
+
+export default App;

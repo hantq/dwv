@@ -1,15 +1,17 @@
-// namespaces
-var dwv = dwv || {};
-dwv.image = dwv.image || {};
+// dwv.image.PixelBufferDecoder
+
+import ThreadPool from '../utils/threadPool';
+import WorkerTask from '../utils/workerTask';
 
 // JPEG Baseline
 var hasJpegBaselineDecoder = typeof JpegImage !== 'undefined';
 var JpegImage = JpegImage || {};
+
 // JPEG Lossless
-var hasJpegLosslessDecoder =
-  typeof jpeg !== 'undefined' && typeof jpeg.lossless !== 'undefined';
+var hasJpegLosslessDecoder = typeof jpeg !== 'undefined' && typeof jpeg.lossless !== 'undefined';
 var jpeg = jpeg || {};
 jpeg.lossless = jpeg.lossless || {};
+
 // JPEG 2000
 var hasJpeg2000Decoder = typeof JpxImage !== 'undefined';
 var JpxImage = JpxImage || {};
@@ -18,9 +20,9 @@ var JpxImage = JpxImage || {};
  * Asynchronous pixel buffer decoder.
  * @param {String} script The path to the decoder script to be used by the web worker.
  */
-dwv.image.AsynchPixelBufferDecoder = function(script) {
+const AsynchPixelBufferDecoder = function(script) {
   // initialise the thread pool
-  var pool = new dwv.utils.ThreadPool(15);
+  var pool = new ThreadPool(15);
   pool.init();
 
   /**
@@ -35,7 +37,7 @@ dwv.image.AsynchPixelBufferDecoder = function(script) {
     pool.onpoolworkend = this.ondecodeend;
     pool.onworkerend = this.ondecoded;
     // create worker task
-    var workerTask = new dwv.utils.WorkerTask(script, callback, {
+    var workerTask = new WorkerTask(script, callback, {
       buffer: pixelBuffer,
       bitsAllocated: bitsAllocated,
       isSigned: isSigned,
@@ -56,14 +58,14 @@ dwv.image.AsynchPixelBufferDecoder = function(script) {
 /**
  * Handle a decode end event.
  */
-dwv.image.AsynchPixelBufferDecoder.prototype.ondecodeend = function() {
+AsynchPixelBufferDecoder.prototype.ondecodeend = function() {
   // default does nothing.
 };
 
 /**
  * Handle a decode event.
  */
-dwv.image.AsynchPixelBufferDecoder.prototype.ondecoded = function() {
+AsynchPixelBufferDecoder.prototype.ondecoded = function() {
   // default does nothing.
 };
 
@@ -71,7 +73,7 @@ dwv.image.AsynchPixelBufferDecoder.prototype.ondecoded = function() {
  * Synchronous pixel buffer decoder.
  * @param {String} algoName The decompression algorithm name.
  */
-dwv.image.SynchPixelBufferDecoder = function(algoName) {
+const SynchPixelBufferDecoder = function(algoName) {
   /**
    * Decode a pixel buffer.
    * @param {Array} pixelBuffer The pixel buffer.
@@ -142,14 +144,14 @@ dwv.image.SynchPixelBufferDecoder = function(algoName) {
 /**
  * Handle a decode end event.
  */
-dwv.image.SynchPixelBufferDecoder.prototype.ondecodeend = function() {
+SynchPixelBufferDecoder.prototype.ondecodeend = function() {
   // default does nothing.
 };
 
 /**
  * Handle a decode event.
  */
-dwv.image.SynchPixelBufferDecoder.prototype.ondecoded = function() {
+SynchPixelBufferDecoder.prototype.ondecoded = function() {
   // default does nothing.
 };
 
@@ -160,7 +162,7 @@ dwv.image.SynchPixelBufferDecoder.prototype.ondecoded = function() {
  * If the 'dwv.image.decoderScripts' variable does not contain the desired algorythm,
  * the decoder will switch to the synchronous mode.
  */
-dwv.image.PixelBufferDecoder = function(algoName) {
+const PixelBufferDecoder = function(algoName) {
   /**
    * Pixel decoder.
    * Defined only once.
@@ -174,11 +176,9 @@ dwv.image.PixelBufferDecoder = function(algoName) {
     typeof dwv.image.decoderScripts !== 'undefined' &&
     typeof dwv.image.decoderScripts[algoName] !== 'undefined'
   ) {
-    pixelDecoder = new dwv.image.AsynchPixelBufferDecoder(
-      dwv.image.decoderScripts[algoName]
-    );
+    pixelDecoder = new AsynchPixelBufferDecoder(dwv.image.decoderScripts[algoName]);
   } else {
-    pixelDecoder = new dwv.image.SynchPixelBufferDecoder(algoName);
+    pixelDecoder = new SynchPixelBufferDecoder(algoName);
   }
 
   /**
@@ -208,13 +208,15 @@ dwv.image.PixelBufferDecoder = function(algoName) {
 /**
  * Handle a decode end event.
  */
-dwv.image.PixelBufferDecoder.prototype.ondecodeend = function() {
+PixelBufferDecoder.prototype.ondecodeend = function() {
   // default does nothing.
 };
 
 /**
  * Handle a decode end event.
  */
-dwv.image.PixelBufferDecoder.prototype.ondecoded = function() {
+PixelBufferDecoder.prototype.ondecoded = function() {
   // default does nothing.
 };
+
+export const PixelBufferDecoder;

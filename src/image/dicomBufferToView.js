@@ -1,109 +1,101 @@
-// namespaces
-var dwv = dwv || {};
-dwv.image = dwv.image || {};
+import { DicomParser, cleanString, getSyntaxDecompressionName } from '../dicom/dicomParser';
+import { PixelBufferDecoder } from '../image/decoder';
+import { ImageFactory } from '../image/image';
+import { ViewFactory } from '../image/view';
 
 /**
  * Create a dwv.image.View from a DICOM buffer.
  * @constructor
  */
-dwv.image.DicomBufferToView = function() {
+const DicomBufferToView = function () {
   // closure to self
-  var self = this;
+  const self = this;
 
   /**
-   * The default character set (optional).
-   * @private
-   * @type String
-   */
-  var defaultCharacterSet;
+     * The default character set (optional).
+     * @private
+     * @type String
+     */
+  let defaultCharacterSet;
 
   /**
-   * Set the default character set.
-   * param {String} The character set.
-   */
-  this.setDefaultCharacterSet = function(characterSet) {
+     * Set the default character set.
+     * param {String} The character set.
+     */
+  this.setDefaultCharacterSet = function (characterSet) {
     defaultCharacterSet = characterSet;
   };
 
   /**
-   * Pixel buffer decoder.
-   * Define only once to allow optional asynchronous mode.
-   * @private
-   * @type Object
-   */
-  var pixelDecoder = null;
+     * Pixel buffer decoder.
+     * Define only once to allow optional asynchronous mode.
+     * @private
+     * @type Object
+     */
+  let pixelDecoder = null;
 
   /**
-   * Get data from an input buffer using a DICOM parser.
-   * @param {Array} buffer The input data buffer.
-   * @param {Number} dataIndex The data index.
-   */
-  this.convert = function(buffer, dataIndex) {
+     * Get data from an input buffer using a DICOM parser.
+     * @param {Array} buffer The input data buffer.
+     * @param {Number} dataIndex The data index.
+     */
+  this.convert = function (buffer, dataIndex) {
     // DICOM parser
-    var dicomParser = new dwv.dicom.DicomParser();
+    const dicomParser = new DicomParser();
     dicomParser.setDefaultCharacterSet(defaultCharacterSet);
     // parse the buffer
     dicomParser.parse(buffer);
 
-    var pixelBuffer = dicomParser.getRawDicomElements().x7FE00010.value;
-    var syntax = dwv.dicom.cleanString(
-      dicomParser.getRawDicomElements().x00020010.value[0]
-    );
-    var algoName = dwv.dicom.getSyntaxDecompressionName(syntax);
-    var needDecompression = algoName !== null;
+    const pixelBuffer = dicomParser.getRawDicomElements().x7FE00010.value;
+    const syntax = cleanString(dicomParser.getRawDicomElements().x00020010.value[0]);
+    const algoName = getSyntaxDecompressionName(syntax);
+    const needDecompression = (algoName !== null);
 
     // worker callback
-    var onDecodedFirstFrame = function(/*event*/) {
+    const onDecodedFirstFrame = function (/* event */) {
       // create the image
-      var imageFactory = new dwv.image.ImageFactory();
-      var image = imageFactory.create(
-        dicomParser.getDicomElements(),
-        pixelBuffer
-      );
+      const imageFactory = new ImageFactory();
+      const image = imageFactory.create(dicomParser.getDicomElements(), pixelBuffer);
       // create the view
-      var viewFactory = new dwv.image.ViewFactory();
-      var view = viewFactory.create(dicomParser.getDicomElements(), image);
+      const viewFactory = new ViewFactory();
+      const view = viewFactory.create(dicomParser.getDicomElements(), image);
       // return
-      self.onload({
-        view: view,
-        info: dicomParser.getDicomElements().dumpToTable(),
-      });
+      self.onload({ view, info: dicomParser.getDicomElements().dumpToTable() });
     };
 
     if (needDecompression) {
-      var bitsAllocated = dicomParser.getRawDicomElements().x00280100.value[0];
-      var pixelRepresentation = dicomParser.getRawDicomElements().x00280103
-        .value[0];
-      var isSigned = pixelRepresentation === 1;
-      var nFrames = pixelBuffer.length;
+      const bitsAllocated = dicomParser.getRawDicomElements().x00280100.value[0];
+      const pixelRepresentation = dicomParser.getRawDicomElements().x00280103.value[0];
+      const isSigned = (pixelRepresentation === 1);
+      const nFrames = pixelBuffer.length;
 
       if (!pixelDecoder) {
-        pixelDecoder = new dwv.image.PixelBufferDecoder(algoName);
+        pixelDecoder = new PixelBufferDecoder(algoName);
       }
 
       // loadend event
-      pixelDecoder.ondecodeend = function() {
+      pixelDecoder.ondecodeend = function () {
         self.onloadend();
       };
 
       // send an onload event for mono frame
       if (nFrames === 1) {
-        pixelDecoder.ondecoded = function() {
+        pixelDecoder.ondecoded = function () {
           self.onloadend();
         };
       }
 
       // decoder callback
-      var countDecodedFrames = 0;
-      var onDecodedFrame = function(frame) {
-        return function(event) {
+      let countDecodedFrames = 0;
+      const onDecodedFrame = function (frame) {
+        return function (event) {
           // send progress
           ++countDecodedFrames;
-          var ev = {
+          const ev = {
             type: 'load-progress',
             lengthComputable: true,
-            loaded: countDecodedFrames * 100 / nFrames,
-            total: 100,
+            loaded: (countDecodedFrames * 100 / nFrames),
+            total: 100
           };
           if (typeof dataIndex !== 'undefined') {
             ev.index = dataIndex;
@@ -130,7 +122,7 @@ dwv.image.DicomBufferToView = function() {
       // decompress the possible other frames
       if (nFrames !== 1) {
         // decode (asynchronously if possible)
-        for (var f = 1; f < nFrames; ++f) {
+        for (let f = 1; f < nFrames; ++f) {
           pixelDecoder.decode(
             pixelBuffer[f],
             bitsAllocated,
@@ -139,14 +131,15 @@ dwv.image.DicomBufferToView = function() {
           );
         }
       }
-    } else {
-      // no decompression
+    }
+    // no decompression
+    else {
       // send progress
-      var evnodec = {
+      const evnodec = {
         type: 'load-progress',
         lengthComputable: true,
         loaded: 100,
-        total: 100,
+        total: 100
       };
       if (typeof dataIndex !== 'undefined') {
         evnodec.index = dataIndex;
@@ -160,9 +153,9 @@ dwv.image.DicomBufferToView = function() {
   };
 
   /**
-   * Abort a conversion.
-   */
-  this.abort = function() {
+     * Abort a conversion.
+     */
+  this.abort = function () {
     if (pixelDecoder) {
       pixelDecoder.abort();
     }
@@ -174,16 +167,18 @@ dwv.image.DicomBufferToView = function() {
  * @param {Object} event The load end event.
  * Default does nothing.
  */
-dwv.image.DicomBufferToView.prototype.onloadend = function(/*event*/) {};
+DicomBufferToView.prototype.onloadend = function (/* event */) {};
 /**
  * Handle a load event.
  * @param {Object} event The load event.
  * Default does nothing.
  */
-dwv.image.DicomBufferToView.prototype.onload = function(/*event*/) {};
+DicomBufferToView.prototype.onload = function (/* event */) {};
 /**
  * Handle a load progress event.
  * @param {Object} event The progress event.
  * Default does nothing.
  */
-dwv.image.DicomBufferToView.prototype.onprogress = function(/*event*/) {};
+DicomBufferToView.prototype.onprogress = function (/* event */) {};
+
+export default DicomBufferToView;

@@ -1,8 +1,9 @@
-// namespaces
-var dwv = dwv || {};
-dwv.tool = dwv.tool || {};
-/** @namespace */
-dwv.tool.filter = dwv.tool.filter || {};
+// dwv.tool.Filter
+// dwv.tool.filter
+
+import ListenerHandler from '../utils/listenerHandler';
+
+const filter = {};
 
 /**
  * Filter tool.
@@ -10,7 +11,7 @@ dwv.tool.filter = dwv.tool.filter || {};
  * @param {Array} filterList The list of filter objects.
  * @param {Object} app The associated app.
  */
-dwv.tool.Filter = function(filterList, app) {
+const Filter = function(filterList, app) {
   /**
    * Filter GUI.
    * @type Object
@@ -40,7 +41,7 @@ dwv.tool.Filter = function(filterList, app) {
    * Listener handler.
    * @type Object
    */
-  var listenerHandler = new dwv.utils.ListenerHandler();
+  var listenerHandler = new ListenerHandler();
 
   /**
    * Setup the filter GUI. Called at app startup.
@@ -129,7 +130,7 @@ dwv.tool.Filter = function(filterList, app) {
  * Get the selected filter.
  * @return {Object} The selected filter.
  */
-dwv.tool.Filter.prototype.getSelectedFilter = function() {
+Filter.prototype.getSelectedFilter = function() {
   return this.selectedFilter;
 };
 
@@ -137,7 +138,7 @@ dwv.tool.Filter.prototype.getSelectedFilter = function() {
  * Set the selected filter.
  * @return {String} The name of the filter to select.
  */
-dwv.tool.Filter.prototype.setSelectedFilter = function(name) {
+Filter.prototype.setSelectedFilter = function(name) {
   // check if we have it
   if (!this.hasFilter(name)) {
     throw new Error("Unknown filter: '" + name + "'");
@@ -158,7 +159,7 @@ dwv.tool.Filter.prototype.setSelectedFilter = function(name) {
  * Get the list of filters.
  * @return {Array} The list of filter objects.
  */
-dwv.tool.Filter.prototype.getFilterList = function() {
+Filter.prototype.getFilterList = function() {
   return this.filterList;
 };
 
@@ -167,7 +168,7 @@ dwv.tool.Filter.prototype.getFilterList = function() {
  * @param {String} name The name to check.
  * @return {String} The filter list element for the given name.
  */
-dwv.tool.Filter.prototype.hasFilter = function(name) {
+Filter.prototype.hasFilter = function(name) {
   return this.filterList[name];
 };
 
@@ -176,7 +177,7 @@ dwv.tool.Filter.prototype.hasFilter = function(name) {
  * @constructor
  * @param {Object} app The associated application.
  */
-dwv.tool.filter.Threshold = function(app) {
+filter.Threshold = function(app) {
   /**
    * Associated filter.
    * @type Object
@@ -196,7 +197,7 @@ dwv.tool.filter.Threshold = function(app) {
    * Listener handler.
    * @type Object
    */
-  var listenerHandler = new dwv.utils.ListenerHandler();
+  var listenerHandler = new ListenerHandler();
 
   /**
    * Setup the filter GUI. Called at app startup.
@@ -236,7 +237,7 @@ dwv.tool.filter.Threshold = function(app) {
       filter.setOriginalImage(app.getImage());
       resetImage = false;
     }
-    var command = new dwv.tool.RunFilterCommand(filter, app);
+    var command = new RunFilterCommand(filter, app);
     command.onExecute = fireEvent;
     command.execute();
   };
@@ -273,7 +274,7 @@ dwv.tool.filter.Threshold = function(app) {
  * @constructor
  * @param {Object} app The associated application.
  */
-dwv.tool.filter.Sharpen = function(app) {
+filter.Sharpen = function(app) {
   /**
    * Filter GUI.
    * @type Object
@@ -283,7 +284,7 @@ dwv.tool.filter.Sharpen = function(app) {
    * Listener handler.
    * @type Object
    */
-  var listenerHandler = new dwv.utils.ListenerHandler();
+  var listenerHandler = new ListenerHandler();
 
   /**
    * Setup the filter GUI. Called at app startup.
@@ -314,7 +315,7 @@ dwv.tool.filter.Sharpen = function(app) {
   this.run = function(/*args*/) {
     var filter = new dwv.image.filter.Sharpen();
     filter.setOriginalImage(app.getImage());
-    var command = new dwv.tool.RunFilterCommand(filter, app);
+    var command = new RunFilterCommand(filter, app);
     command.onExecute = fireEvent;
     command.execute();
   };
@@ -351,7 +352,7 @@ dwv.tool.filter.Sharpen = function(app) {
  * @constructor
  * @param {Object} app The associated application.
  */
-dwv.tool.filter.Sobel = function(app) {
+filter.Sobel = function(app) {
   /**
    * Filter GUI.
    * @type Object
@@ -361,7 +362,7 @@ dwv.tool.filter.Sobel = function(app) {
    * Listener handler.
    * @type Object
    */
-  var listenerHandler = new dwv.utils.ListenerHandler();
+  var listenerHandler = new ListenerHandler();
 
   /**
    * Setup the filter GUI. Called at app startup.
@@ -392,7 +393,7 @@ dwv.tool.filter.Sobel = function(app) {
   dwv.tool.filter.Sobel.prototype.run = function(/*args*/) {
     var filter = new dwv.image.filter.Sobel();
     filter.setOriginalImage(app.getImage());
-    var command = new dwv.tool.RunFilterCommand(filter, app);
+    var command = new RunFilterCommand(filter, app);
     command.onExecute = fireEvent;
     command.execute();
   };
@@ -430,7 +431,7 @@ dwv.tool.filter.Sobel = function(app) {
  * @param {Object} filter The filter to run.
  * @param {Object} app The associated application.
  */
-dwv.tool.RunFilterCommand = function(filter, app) {
+const RunFilterCommand = function(filter, app) {
   /**
    * Get the command name.
    * @return {String} The command name.
@@ -456,6 +457,6 @@ dwv.tool.RunFilterCommand = function(filter, app) {
  * Handle an execute event.
  * @param {Object} event The execute event with type and id.
  */
-dwv.tool.RunFilterCommand.prototype.onExecute = function(/*event*/) {
+RunFilterCommand.prototype.onExecute = function(/*event*/) {
   // default does nothing.
 };

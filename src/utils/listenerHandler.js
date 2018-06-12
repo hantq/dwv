@@ -1,17 +1,15 @@
-// namespaces
-var dwv = dwv || {};
-dwv.utils = dwv.utils || {};
+// dwv.utils.ListenerHandler
 
 /**
  * ListenerHandler class: handles add/removing and firing listeners.
  * @constructor
  */
-dwv.utils.ListenerHandler = function() {
+const ListenerHandler = function() {
   /**
    * listeners.
    * @private
    */
-  var listeners = {};
+  const listeners = {};
 
   /**
    * Add an event listener.
@@ -20,11 +18,10 @@ dwv.utils.ListenerHandler = function() {
    *    will be called with the fired event.
    */
   this.add = function(type, callback) {
-    // create array if not present
     if (typeof listeners[type] === 'undefined') {
       listeners[type] = [];
     }
-    // add callback to listeners array
+
     listeners[type].push(callback);
   };
 
@@ -34,14 +31,14 @@ dwv.utils.ListenerHandler = function() {
    * @param {Object} callback The method associated with the provided event type.
    */
   this.remove = function(type, callback) {
-    // check if the type is present
     if (typeof listeners[type] === 'undefined') {
       return;
     }
-    // remove from listeners array
-    for (var i = 0; i < listeners[type].length; ++i) {
+
+    for (let i = 0, len = listeners[type].length; i < len; ++i) {
       if (listeners[type][i] === callback) {
         listeners[type].splice(i, 1);
+        break;
       }
     }
   };
@@ -51,13 +48,14 @@ dwv.utils.ListenerHandler = function() {
    * @param {Object} event The event to fire.
    */
   this.fireEvent = function(event) {
-    // check if they are listeners for the event type
     if (typeof listeners[event.type] === 'undefined') {
       return;
     }
-    // fire events
-    for (var i = 0; i < listeners[event.type].length; ++i) {
+
+    for (let i = 0, len = listeners[event.type].length; i < len; ++i) {
       listeners[event.type][i](event);
     }
   };
 };
+
+export default ListenerHandler;

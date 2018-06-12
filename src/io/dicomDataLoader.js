@@ -99,34 +99,6 @@ dwv.io.DicomDataLoader = function() {
       self.load(event.target.result, file, index);
     };
   };
-
-  /**
-   * Get a url load handler.
-   * @param {String} url The url to load.
-   * @param {Number} index The index 'id' of the url.
-   * @return {Function} A url load handler.
-   */
-  this.getUrlLoadHandler = function(url, index) {
-    return function(/*event*/) {
-      // check response status
-      // https://developer.mozilla.org/en-US/docs/Web/HTTP/Response_codes
-      // status 200: "OK"; status 0: "debug"
-      if (this.status !== 200 && this.status !== 0) {
-        self.onerror({
-          name: 'RequestError',
-          message:
-            'Error status: ' +
-            this.status +
-            " while loading '" +
-            url +
-            "' [DicomDataLoader]",
-        });
-        return;
-      }
-      // load
-      self.load(this.response, url, index);
-    };
-  };
 }; // class DicomDataLoader
 
 /**

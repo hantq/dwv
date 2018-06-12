@@ -1,6 +1,6 @@
-// namespaces
-var dwv = dwv || {};
-dwv.math = dwv.math || {};
+// dwv.math.Stats
+// dwv.math.getStats
+// dwv.math.guid
 
 /**
  * Basic statistics
@@ -10,7 +10,7 @@ dwv.math = dwv.math || {};
  * @param {Number} mean The mean value.
  * @param {Number} stdDev The standard deviation.
  */
-dwv.math.Stats = function(min, max, mean, stdDev) {
+export const Stats = function(min, max, mean, stdDev) {
   /**
    * Get the minimum value.
    * @return {Number} The minimum value.
@@ -46,7 +46,7 @@ dwv.math.Stats = function(min, max, mean, stdDev) {
  * @param {Object} rhs The other Stats object to compare to.
  * @return {Boolean} True if both Stats object are equal.
  */
-dwv.math.Stats.prototype.equals = function(rhs) {
+Stats.prototype.equals = function(rhs) {
   return (
     rhs !== null &&
     this.getMin() === rhs.getMin() &&
@@ -60,7 +60,7 @@ dwv.math.Stats.prototype.equals = function(rhs) {
  * Get the stats as an object
  * @return {Object} An object representation of the stats.
  */
-dwv.math.Stats.prototype.asObject = function() {
+Stats.prototype.asObject = function() {
   return {
     min: this.getMin(),
     max: this.getMax(),
@@ -74,7 +74,7 @@ dwv.math.Stats.prototype.asObject = function() {
  * of an array of values.
  * Note: could use {@link https://github.com/tmcw/simple-statistics}.
  */
-dwv.math.getStats = function(array) {
+export const getStats = function(array) {
   var min = array[0];
   var max = min;
   var mean = 0;
@@ -100,7 +100,7 @@ dwv.math.getStats = function(array) {
   variance = sumSqr / array.length - mean * mean;
   stdDev = Math.sqrt(variance);
 
-  return new dwv.math.Stats(min, max, mean, stdDev);
+  return new Stats(min, max, mean, stdDev);
 };
 
 /**
@@ -108,8 +108,6 @@ dwv.math.getStats = function(array) {
  * See {@link http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript}
  * and this {@link http://stackoverflow.com/a/13403498 answer}.
  */
-dwv.math.guid = function() {
-  return Math.random()
-    .toString(36)
-    .substring(2, 15);
+export const guid = function() {
+  return Math.random().toString(36).substring(2, 15);
 };

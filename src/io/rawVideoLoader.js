@@ -28,23 +28,6 @@ dwv.io.RawVideoLoader = function() {
   };
 
   /**
-   * Create a Data URI from an HTTP request response.
-   * @param {Object} response The HTTP request response.
-   * @param {String} dataType The data type.
-   */
-  function createDataUri(response, dataType) {
-    // image data as string
-    var bytes = new Uint8Array(response);
-    var videoDataStr = '';
-    for (var i = 0; i < bytes.byteLength; ++i) {
-      videoDataStr += String.fromCharCode(bytes[i]);
-    }
-    // create uri
-    var uri = 'data:video/' + dataType + ';base64,' + window.btoa(videoDataStr);
-    return uri;
-  }
-
-  /**
    * Internal Data URI load.
    * @param {Object} dataUri The data URI.
    * @param {String} origin The data origin.
@@ -89,38 +72,6 @@ dwv.io.RawVideoLoader = function() {
   this.getFileLoadHandler = function(file, index) {
     return function(event) {
       self.load(event.target.result, file, index);
-    };
-  };
-
-  /**
-   * Get a url load handler.
-   * @param {String} url The url to load.
-   * @param {Number} index The index 'id' of the url.
-   * @return {Function} A url load handler.
-   */
-  this.getUrlLoadHandler = function(url, index) {
-    return function(/*event*/) {
-      // check response status
-      // https://developer.mozilla.org/en-US/docs/Web/HTTP/Response_codes
-      // status 200: "OK"; status 0: "debug"
-      if (this.status !== 200 && this.status !== 0) {
-        self.onerror({
-          name: 'RequestError',
-          message:
-            'Error status: ' +
-            this.status +
-            " while loading '" +
-            url +
-            "' [RawVideoLoader]",
-        });
-        return;
-      }
-      // load
-      var ext = url
-        .split('.')
-        .pop()
-        .toLowerCase();
-      self.load(createDataUri(this.response, ext), url, index);
     };
   };
 }; // class RawVideoLoader
