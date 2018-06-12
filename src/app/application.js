@@ -708,10 +708,10 @@ dwv.App = function() {
   };
 
   /**
-   * Handle colour map change.
-   * @param {Object} event The event fired when changing the colour map.
+   * Handle color map change.
+   * @param {Object} event The event fired when changing the color map.
    */
-  this.onColourChange = function(/*event*/) {
+  this.onColorChange = function(/*event*/) {
     generateAndDrawImage();
   };
 
@@ -824,12 +824,12 @@ dwv.App = function() {
   };
 
   /**
-   * Handle colour map change. Will activate the tool using
+   * Handle color map change. Will activate the tool using
    * the value property of the 'event.currentTarget'.
    * @param {Object} event The change event.
    */
-  this.onChangeColourMap = function(event) {
-    viewController.setColourMapFromName(event.currentTarget.value);
+  this.onChangeColorMap = function(event) {
+    viewController.setColorMapFromName(event.currentTarget.value);
   };
 
   /**
@@ -868,13 +868,13 @@ dwv.App = function() {
   };
 
   /**
-   * Handle line colour change. Will activate the colour using
+   * Handle line color change. Will activate the color using
    * the value property of the 'event.currentTarget'.
    * @param {Object} event The change event.
    */
-  this.onChangeLineColour = function(event) {
+  this.onChangeLineColor = function(event) {
     // called from an HTML select, use its value
-    toolboxController.setLineColour(event.currentTarget.value);
+    toolboxController.setLineColor(event.currentTarget.value);
   };
 
   /**
@@ -1113,14 +1113,14 @@ dwv.App = function() {
     // image listeners
     view.addEventListener('wl-width-change', self.onWLChange);
     view.addEventListener('wl-center-change', self.onWLChange);
-    view.addEventListener('colour-change', self.onColourChange);
+    view.addEventListener('color-change', self.onColorChange);
     view.addEventListener('slice-change', self.onSliceChange);
     view.addEventListener('frame-change', self.onFrameChange);
 
     // connect with local listeners
     view.addEventListener('wl-width-change', fireEvent);
     view.addEventListener('wl-center-change', fireEvent);
-    view.addEventListener('colour-change', fireEvent);
+    view.addEventListener('color-change', fireEvent);
     view.addEventListener('position-change', fireEvent);
     view.addEventListener('slice-change', fireEvent);
     view.addEventListener('frame-change', fireEvent);

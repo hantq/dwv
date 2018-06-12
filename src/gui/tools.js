@@ -84,13 +84,13 @@ dwv.gui.base.WindowLevel = function(app) {
     // preset select
     var wlSelector = dwv.html.createHtmlSelect('presetSelect', []);
     wlSelector.onchange = app.onChangeWindowLevelPreset;
-    // colour map select
+    // color map select
     var cmSelector = dwv.html.createHtmlSelect(
-      'colourMapSelect',
-      dwv.tool.colourMaps,
-      'colourmap'
+      'colorMapSelect',
+      dwv.tool.colorMaps,
+      'colormap'
     );
-    cmSelector.onchange = app.onChangeColourMap;
+    cmSelector.onchange = app.onChangeColorMap;
 
     // preset list element
     var wlLi = document.createElement('li');
@@ -98,7 +98,7 @@ dwv.gui.base.WindowLevel = function(app) {
     //wlLi.className = "wlLi";
     wlLi.style.display = 'none';
     wlLi.appendChild(wlSelector);
-    // colour map list element
+    // color map list element
     var cmLi = document.createElement('li');
     cmLi.className = 'cmLi ui-block-c';
     //cmLi.className = "cmLi";
@@ -109,7 +109,7 @@ dwv.gui.base.WindowLevel = function(app) {
     var node = app.getElement('toolList').getElementsByTagName('ul')[0];
     // append preset
     node.appendChild(wlLi);
-    // append colour map
+    // append color map
     node.appendChild(cmLi);
     // refresh
     dwv.gui.refreshElement(node);
@@ -123,7 +123,7 @@ dwv.gui.base.WindowLevel = function(app) {
     // presets list element
     var node = app.getElement('wlLi');
     dwv.html.displayElement(node, bool);
-    // colour map list element
+    // color map list element
     node = app.getElement('cmLi');
     dwv.html.displayElement(node, bool);
   };
@@ -151,8 +151,8 @@ dwv.gui.base.WindowLevel = function(app) {
     // refresh
     dwv.gui.refreshElement(wlLi);
 
-    // colour map select
-    var cmSelector = app.getElement('colourMapSelect');
+    // color map select
+    var cmSelector = app.getElement('colorMapSelect');
     cmSelector.selectedIndex = 0;
     // special monochrome1 case
     if (app.getImage().getPhotometricInterpretation() === 'MONOCHROME1') {
@@ -164,12 +164,12 @@ dwv.gui.base.WindowLevel = function(app) {
 }; // class dwv.gui.base.WindowLevel
 
 /**
- * Base gui for a tool with a colour setting.
+ * Base gui for a tool with a color setting.
  * @constructor
  */
-dwv.gui.base.ColourTool = function(app, prefix) {
-  // default colours
-  var colours = [
+dwv.gui.base.ColorTool = function(app, prefix) {
+  // default colors
+  var colors = [
     'Yellow',
     'Red',
     'White',
@@ -179,15 +179,15 @@ dwv.gui.base.ColourTool = function(app, prefix) {
     'Fuchsia',
     'Black',
   ];
-  // colour selector class
-  var colourSelectClassName = prefix + 'ColourSelect';
-  // colour selector class
-  var colourLiClassName = prefix + 'ColourLi';
+  // color selector class
+  var colorSelectClassName = prefix + 'ColorSelect';
+  // color selector class
+  var colorLiClassName = prefix + 'ColorLi';
 
   /**
-   * Get the default colour.
+   * Get the default color.
    */
-  this.getDefaultColour = function() {
+  this.getDefaultColor = function() {
     return '#FFFF80';
   };
 
@@ -195,25 +195,25 @@ dwv.gui.base.ColourTool = function(app, prefix) {
    * Setup the tool HTML.
    */
   this.setup = function() {
-    // colour select
-    var colourSelector = null;
-    colourSelector = document.createElement('input');
-    colourSelector.className = colourSelectClassName;
-    colourSelector.type = 'color';
-    colourSelector.value = '#FFFF80';
-    colourSelector.onchange = app.onChangeLineColour;
+    // color select
+    var colorSelector = null;
+    colorSelector = document.createElement('input');
+    colorSelector.className = colorSelectClassName;
+    colorSelector.type = 'color';
+    colorSelector.value = '#FFFF80';
+    colorSelector.onchange = app.onChangeLineColor;
 
-    // colour list element
-    var colourLi = document.createElement('li');
-    colourLi.className = colourLiClassName + ' ui-block-b';
-    colourLi.style.display = 'none';
-    //colourLi.setAttribute("class","ui-block-b");
-    colourLi.appendChild(colourSelector);
+    // color list element
+    var colorLi = document.createElement('li');
+    colorLi.className = colorLiClassName + ' ui-block-b';
+    colorLi.style.display = 'none';
+    //colorLi.setAttribute("class","ui-block-b");
+    colorLi.appendChild(colorSelector);
 
     // node
     var node = app.getElement('toolList').getElementsByTagName('ul')[0];
-    // apend colour
-    node.appendChild(colourLi);
+    // apend color
+    node.appendChild(colorLi);
     // refresh
     dwv.gui.refreshElement(node);
   };
@@ -223,8 +223,8 @@ dwv.gui.base.ColourTool = function(app, prefix) {
    * @param {Boolean} bool True to display, false to hide.
    */
   this.display = function(bool) {
-    // colour list
-    var node = app.getElement(colourLiClassName);
+    // color list
+    var node = app.getElement(colorLiClassName);
     dwv.html.displayElement(node, bool);
   };
 
@@ -232,10 +232,10 @@ dwv.gui.base.ColourTool = function(app, prefix) {
    * Initialise the tool HTML.
    */
   this.initialise = function() {
-    var colourSelector = app.getElement(colourSelectClassName);
-    dwv.gui.refreshElement(colourSelector);
+    var colorSelector = app.getElement(colorSelectClassName);
+    dwv.gui.refreshElement(colorSelector);
   };
-}; // class dwv.gui.base.ColourTool
+}; // class dwv.gui.base.ColorTool
 
 /**
  * ZoomAndPan tool base gui.

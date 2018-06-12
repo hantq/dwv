@@ -294,12 +294,12 @@ dwv.html.Layer = function(canvas) {
   };
 
   /**
-   * Set the line colour for the layer.
-   * @input {String} colour The line colour.
+   * Set the line color for the layer.
+   * @input {String} color The line color.
    */
-  this.setLineColour = function(colour) {
-    context.fillStyle = colour;
-    context.strokeStyle = colour;
+  this.setLineColor = function(color) {
+    context.fillStyle = color;
+    context.strokeStyle = color;
   };
 
   /**

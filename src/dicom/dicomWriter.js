@@ -1163,7 +1163,7 @@ dwv.dicom.generatePixelDataFromJSONTags = function(
   }
 
   var nSamples = 1;
-  var nColourPlanes = 1;
+  var nColorPlanes = 1;
   if (samplesPerPixel === 3) {
     if (typeof tags.PlanarConfiguration === 'undefined') {
       throw new Error('Missing PlanarConfiguration for pixel generation.');
@@ -1178,7 +1178,7 @@ dwv.dicom.generatePixelDataFromJSONTags = function(
     if (planarConfiguration === 0) {
       nSamples = 3;
     } else {
-      nColourPlanes = 3;
+      nColorPlanes = 3;
     }
   }
 
@@ -1204,11 +1204,11 @@ dwv.dicom.generatePixelDataFromJSONTags = function(
 
   // main loop
   var offset = 0;
-  for (var c = 0; c < nColourPlanes; ++c) {
+  for (var c = 0; c < nColorPlanes; ++c) {
     for (var j = 0; j < numberOfRows; ++j) {
       for (var i = 0; i < numberOfColumns; ++i) {
         for (var s = 0; s < nSamples; ++s) {
-          if (nColourPlanes !== 1) {
+          if (nColorPlanes !== 1) {
             pixels[offset] = generate(i, j)[c];
           } else {
             pixels[offset] = generate(i, j)[s];

@@ -33,7 +33,7 @@
       "deleteDraws": "Delete All",
       "visible": "Visible"
     },
-    "colour": {
+    "color": {
       "Yellow": {
         "name": "Yellow"
       },
@@ -97,7 +97,7 @@
       },
       "Draw": {
         "name": "Draw",
-        "brief": "Allows to draw shapes on the image. Choose the shape and its colour from the drop down menus. Once created, shapes can be edited by selecting them. Anchors will appear and allow specific shape edition. Drag the shape on the top red cross to delete it. All actions are undoable.",
+        "brief": "Allows to draw shapes on the image. Choose the shape and its color from the drop down menus. Once created, shapes can be edited by selecting them. Anchors will appear and allow specific shape edition. Drag the shape on the top red cross to delete it. All actions are undoable.",
         "mouse_drag": "A single mouse drag draws the desired shape. For the protractor, click to start, draw the first ray to the vertex, wait half a second and draw the second ray.",
         "touch_drag": "A single touch drag draws the desired shape. For the protractor, tap to start, draw the first ray to the vertex, wait half a second and draw the second ray."
       },
@@ -182,7 +182,7 @@
         "name": "Sobel"
       }
     },
-    "colourmap": {
+    "colormap": {
       "plain": {
         "name": "Plain"
       },

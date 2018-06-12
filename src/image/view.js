@@ -184,11 +184,11 @@ dwv.image.View = function(image) {
   var currentPresetName = null;
 
   /**
-   * colour map.
+   * color map.
    * @private
    * @type Object
    */
-  var colourMap = dwv.image.lut.plain;
+  var colorMap = dwv.image.lut.plain;
   /**
    * Current position.
    * @private
@@ -323,11 +323,11 @@ dwv.image.View = function(image) {
   };
 
   /**
-   * Set the default colour map.
-   * @param {Object} map The colour map.
+   * Set the default color map.
+   * @param {Object} map The color map.
    */
-  this.setDefaultColourMap = function(map) {
-    colourMap = map;
+  this.setDefaultColorMap = function(map) {
+    colorMap = map;
   };
 
   /**
@@ -358,20 +358,20 @@ dwv.image.View = function(image) {
   };
 
   /**
-   * Get the colour map of the image.
-   * @return {Object} The colour map of the image.
+   * Get the color map of the image.
+   * @return {Object} The color map of the image.
    */
-  this.getColourMap = function() {
-    return colourMap;
+  this.getColorMap = function() {
+    return colorMap;
   };
   /**
-   * Set the colour map of the image.
-   * @param {Object} map The colour map of the image.
+   * Set the color map of the image.
+   * @param {Object} map The color map of the image.
    */
-  this.setColourMap = function(map) {
-    colourMap = map;
+  this.setColorMap = function(map) {
+    colorMap = map;
     this.fireEvent({
-      type: 'colour-change',
+      type: 'color-change',
       wc: this.getCurrentWindowLut()
         .getWindowLevel()
         .getCenter(),
@@ -684,16 +684,16 @@ dwv.image.View.prototype.generateImageData = function(array) {
   switch (photoInterpretation) {
     case 'MONOCHROME1':
     case 'MONOCHROME2':
-      var colourMap = this.getColourMap();
+      var colorMap = this.getColorMap();
       var iMax = sliceOffset + sliceSize;
       for (var i = sliceOffset; i < iMax; ++i) {
         pxValue = parseInt(
           windowLut.getValue(image.getValueAtOffset(i, frame)),
           10
         );
-        array.data[index] = colourMap.red[pxValue];
-        array.data[index + 1] = colourMap.green[pxValue];
-        array.data[index + 2] = colourMap.blue[pxValue];
+        array.data[index] = colorMap.red[pxValue];
+        array.data[index + 1] = colorMap.green[pxValue];
+        array.data[index + 2] = colorMap.blue[pxValue];
         array.data[index + 3] = 0xff;
         index += 4;
       }
@@ -860,7 +860,7 @@ dwv.image.ViewFactory.prototype.create = function(dicomElements, image) {
 
   // default color map
   if (image.getPhotometricInterpretation() === 'MONOCHROME1') {
-    view.setDefaultColourMap(dwv.image.lut.invPlain);
+    view.setDefaultColorMap(dwv.image.lut.invPlain);
   }
 
   // presets

@@ -20,17 +20,17 @@ dwv.html.Style = function() {
    */
   var fontFamily = 'Verdana';
   /**
-   * Text colour.
+   * Text color.
    * @private
    * @type String
    */
-  var textColour = '#fff';
+  var textColor = '#fff';
   /**
-   * Line colour.
+   * Line color.
    * @private
    * @type String
    */
-  var lineColour = '#ffff80';
+  var lineColor = '#ffff80';
   /**
    * Display scale.
    * @private
@@ -69,27 +69,27 @@ dwv.html.Style = function() {
   };
 
   /**
-   * Get the text colour.
-   * @return {String} The text colour.
+   * Get the text color.
+   * @return {String} The text color.
    */
-  this.getTextColour = function() {
-    return textColour;
+  this.getTextColor = function() {
+    return textColor;
   };
 
   /**
-   * Get the line colour.
-   * @return {String} The line colour.
+   * Get the line color.
+   * @return {String} The line color.
    */
-  this.getLineColour = function() {
-    return lineColour;
+  this.getLineColor = function() {
+    return lineColor;
   };
 
   /**
-   * Set the line colour.
-   * @param {String} colour The line colour.
+   * Set the line color.
+   * @param {String} color The line color.
    */
-  this.setLineColour = function(colour) {
-    lineColour = colour;
+  this.setLineColor = function(color) {
+    lineColor = color;
   };
 
   /**

@@ -33,7 +33,7 @@
       "deleteDraws": "删除所有",
       "visible": "可见"
     },
-    "colour": {
+    "color": {
       "Yellow": {
         "name": "黄色"
       },
@@ -182,7 +182,7 @@
         "name": "sobel 算子"
       }
     },
-    "colourmap": {
+    "colormap": {
       "plain": {
         "name": "正常面"
       },

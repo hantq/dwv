@@ -227,31 +227,31 @@ dwv.ViewController = function(view) {
   };
 
   /**
-   * Get the colour map.
-   * @return {Object} The colour map.
+   * Get the color map.
+   * @return {Object} The color map.
    */
-  this.getColourMap = function() {
-    return view.getColourMap();
+  this.getColorMap = function() {
+    return view.getColorMap();
   };
 
   /**
-   * Set the colour map.
-   * @param {Object} colourMap The colour map.
+   * Set the color map.
+   * @param {Object} colorMap The color map.
    */
-  this.setColourMap = function(colourMap) {
-    view.setColourMap(colourMap);
+  this.setColorMap = function(colorMap) {
+    view.setColorMap(colorMap);
   };
 
   /**
-   * Set the colour map from a name.
-   * @param {String} name The name of the colour map to set.
+   * Set the color map from a name.
+   * @param {String} name The name of the color map to set.
    */
-  this.setColourMapFromName = function(name) {
+  this.setColorMapFromName = function(name) {
     // check if we have it
-    if (!dwv.tool.colourMaps[name]) {
-      throw new Error("Unknown colour map: '" + name + "'");
+    if (!dwv.tool.colorMaps[name]) {
+      throw new Error("Unknown color map: '" + name + "'");
     }
     // enable it
-    this.setColourMap(dwv.tool.colourMaps[name]);
+    this.setColorMap(dwv.tool.colorMaps[name]);
   };
 }; // class dwv.ViewController
